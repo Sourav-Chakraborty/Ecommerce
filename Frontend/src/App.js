@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import { Navbar,Login,Register, ForgetPassword,Dashboard,ChangePassword,AlertBox} from './Components'
-import Homepage from "./Pages/Homepage"
+import Homepage from "./Pages/Homepage/Homepage"
 import {BrowserRouter as Router,Switch,Route} from "react-router-dom";
+import Footer from './Components/Footer';
+import "./App.css"
 export default class App extends Component {
   constructor(props){
     super(props)
@@ -61,6 +63,7 @@ export default class App extends Component {
               <ChangePassword changeAlert={this.changeAlert}/>
             </Route>
             </Switch>
+            <Footer/>
         </Router>
       </div>
     )
