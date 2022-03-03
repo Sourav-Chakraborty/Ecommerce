@@ -1,7 +1,8 @@
-import { FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
+import {add} from "../../Redux_Store/actions/counterActions"
 import React, { Component } from "react";
 import "./cartitem.css";
-export default class CartItem extends Component {
+import { connect } from "react-redux";
+class CartItem extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -11,11 +12,18 @@ export default class CartItem extends Component {
   }
   handleChange = (e) => {
     const n = e.target.value;
+    const prevN=this.state.qty
     this.setState((prevstate) => {
       prevstate.qty = n;
       return prevstate;
     });
+    const changeInAmount=(n-prevN)*this.state.cost
+    this.props.add(changeInAmount)
   }
+  componentDidMount(){
+    this.props.add(this.props.cost)
+  }
+ 
   
   render() {
     const arrayOfNo = Array.from({ length: 20 }, (_, i) => i + 1);
@@ -30,11 +38,11 @@ export default class CartItem extends Component {
           </h5>
           <p>Price {this.state.cost} rupees per qty</p>
           <h2>
-            Need to pay: Rs{" "}
-            <span style={{ color: "red" }}>{this.state.qty * this.state.cost}</span>{" "}
+            Need to pay: Rs  
+            <span style={{ color: "red" }}>{this.state.qty * this.state.cost}</span>
           </h2>
           <button type="button" class="btn btn-danger my-4">
-            remove from cart{" "}
+            remove from cart 
           </button>
         </div>
         <div className="cartItemRight">
@@ -56,3 +64,11 @@ export default class CartItem extends Component {
     );
   }
 }
+const mapDispatchToProps=(dispatch)=>{
+    return {
+      add:(amount)=>{
+        dispatch(add(amount))
+      }
+    }
+}
+export default connect(null,mapDispatchToProps)(CartItem)

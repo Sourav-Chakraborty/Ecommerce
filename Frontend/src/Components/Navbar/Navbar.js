@@ -84,12 +84,7 @@ class Navbar extends Component {
                 </div>
               ) : (
                 <div>
-                  <p style={{
-                      color: "white",
-                      // marginRight: "10px",
-                      textDecoration: "none",
-                      font: "caption",
-                    }}>{this.props.val}</p>
+                
                   <Link
                     onClick={this.handleSignOut}
                     style={{
@@ -115,7 +110,7 @@ const mapStateToProps = (state) => {
   console.log(state)
   return {
     isLoggedin: state.loginReducers.isLoggedin,
-    val:state.countReducer.val
+    
   };
 };
 const mapDispatchToProps = (dispatch) => {

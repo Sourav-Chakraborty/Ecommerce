@@ -1,17 +1,13 @@
-const increment=()=>{
-    return{
-        type:"INCREMENT",
-        payload:10
-
+const add=(amount)=>{
+    
+    return {
+        type:"ADD",
+        payload:amount
     }
 }
-
-const decrement=()=>{
-    return{
-        type:"DECREMENT",
-        payload:10
-
+const makeZero=()=>{
+    return {
+        type:"MAKE_ZERO",
     }
 }
-
-export {increment,decrement}
+export {add,makeZero}

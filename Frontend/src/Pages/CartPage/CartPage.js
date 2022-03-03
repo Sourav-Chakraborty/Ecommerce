@@ -1,34 +1,28 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import { CartItem } from "../../Components";
+import { makeZero } from "../../Redux_Store/actions/counterActions";
 import "./cartpage.css";
-export default class CartPage extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      totalCost: 0,
-    };
-    this.handleTotalChange.bind(this)
-  }
-  handleTotalChange=(amount)=>{
-   console.log("amount is",amount)
-   const totalRightNow=this.state.totalCost
-    const updatedTotal=totalRightNow+amount
-     this.setState({
-      totalCost:updatedTotal
-    },()=> console.log(this.state))
-    
+ class CartPage extends Component {
+   constructor(props){
+     super(props)
+     this.props.makeZero()
+   }
+  componentWillUnmount(){
+    this.props.makeZero()
   }
   render() {
     const cartItem=[10000,10000,10000,10000]
     return (
+      
       <>
         <div className="center">
           <h2>Your Cart items</h2>
           <div className="cartList">
             {
-              cartItem.map(cart=>{
+              cartItem.map((cart,index)=>{
                 
-               return <CartItem handleTotalChange={this.handleTotalChange} cost={cart}/>
+               return <CartItem key={index} handleTotalChange={this.handleTotalChange} cost={cart}/>
 
               })
             }
@@ -38,7 +32,7 @@ export default class CartPage extends Component {
         <div className="cartFooter container">
           <button className="totalBtn btn btn-success">
             Total Cost Rs{" "}
-            <span style={{ color: "yellow" }}>{this.state.totalCost}</span>
+            <span style={{ color: "yellow" }}>{this.props.totalCost}</span>
             ,click to proceed
           </button>
         </div>
@@ -46,3 +40,16 @@ export default class CartPage extends Component {
     );
   }
 }
+const mapStateToProps=(state)=>{
+  return{
+    totalCost:state.cartAmount.val
+  }
+}
+const mapDispatchToProps=(dispatch)=>{
+  return {
+    makeZero:()=>{
+      dispatch(makeZero())
+    }
+  }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(CartPage)

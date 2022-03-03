@@ -12,7 +12,6 @@ import { Link } from "react-router-dom";
 import { PhotoCamera } from "@material-ui/icons";
 import { withRouter } from "react-router-dom";
 import axios from "axios";
-import {increment,decrement} from "../Redux_Store/actions/counterActions"
 class Dashboard extends Component {
   constructor(props) {
     super(props);
@@ -363,15 +362,6 @@ const mapStateToProps = (state) => {
     
   };
 };
-const mapDispatchToProps=(dispatch)=>{
-  return{
-    increment:()=>{
-      dispatch(increment())
-    },
-    decrement:()=>{
-      dispatch(decrement())
-    }
-  }
-}
 
-export default connect(mapStateToProps,mapDispatchToProps)(withRouter(Dashboard));
+
+export default connect(mapStateToProps)(withRouter(Dashboard));
