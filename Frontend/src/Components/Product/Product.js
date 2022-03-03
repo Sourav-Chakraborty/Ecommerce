@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import "./product.css"
+import {Link} from "react-router-dom"
 
 export default class Product extends Component {
   render() {
@@ -16,7 +17,7 @@ export default class Product extends Component {
               </p>
               <div className="buttons">
                  <button className='mx-2 cardBtnGreen'>Add Cart</button> 
-                 <button className='mx-2 cardBtnYellow'>view</button> 
+                 <Link className='mx-2 cardBtnRed' to="/product/100">view</Link> 
 
               </div>
           </div>

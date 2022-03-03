@@ -1,0 +1,66 @@
+ .heading{
+    height: 75px;
+    width: 90%;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    padding-top: 1%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+}
+.productContainer{
+  
+}
+.imgCard{
+    height: 350px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    background-color: rgba(250, 235, 215, 0.918);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+
+}
+.productPageImg{
+    width: 90%;
+    height: 90%;
+    
+}
+.productInfo{
+    display: flex;
+    flex-wrap: wrap;
+    height: 350px;
+    padding: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+
+}
+.specs{
+    height: 20px !important;
+} 
+.productPage{
+    margin-bottom: 40px;
+}
+.productPageBtns{
+   
+   padding-left: 10% !important;
+   padding-top: 0.5%;
+    margin:20px 0;
+    height: 50px;
+    /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important; */
+
+}
+.red{
+    background-color: red !important;
+    color: white !important;
+}
+.green{
+    background-color: green !important;
+    color: white !important;
+}
+.productPageFooter{
+    display: flex;
+}
+.productPagePrice{
+   margin-left: 5px;
+    margin-top: 10px;
+    padding-top: 2%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+    text-align: center;
+}

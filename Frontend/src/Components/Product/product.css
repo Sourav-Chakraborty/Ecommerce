@@ -18,11 +18,17 @@
     color: white;
     border: none;
   }
-  .cardBtnYellow{
+  .cardBtnRed{
     background-color: rgb(255, 17, 0);
     color: white;
     border: none;
+    padding: 2px 4px;
+    
+    text-decoration: none;
   
+  }
+  .cardBtnRed:hover{
+    color: white;
   }
   .productBody{
     text-align: center;

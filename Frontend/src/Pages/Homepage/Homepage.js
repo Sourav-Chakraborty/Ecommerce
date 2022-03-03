@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Carousel from "../../Components/Carousel";
-import { Container, Grid } from "@material-ui/core";
+import {Grid } from "@material-ui/core";
 import Product from "../../Components/Product/Product";
 import "./Homepage.css";
 export default class Homepage extends Component {
@@ -18,6 +18,10 @@ export default class Homepage extends Component {
             <Product />
             <Product />
             <Product />
+            <Product /> 
+            <Product /> 
+            <Product /> 
+            <Product /> 
             <Product /> 
 
             <Product />

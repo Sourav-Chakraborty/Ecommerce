@@ -6,6 +6,7 @@ import Dashboard from "./Dashboard";
 import ChangePassword from "./ChangePassword";
 import AlertBox from "./AlertBox";
 import Test from "./Test"
+import Footer from "./Footer/Footer";
 
 export{
     Navbar,
@@ -15,5 +16,6 @@ export{
     Dashboard,
     ChangePassword,
     AlertBox,
-    Test
+    Test,
+    Footer
 }
