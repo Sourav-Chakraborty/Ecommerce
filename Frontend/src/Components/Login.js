@@ -70,7 +70,7 @@ class Login extends Component {
   render() {
     
     return (
-      <>
+      <div >
         <Link id='dashboard' to="/dashboard"></Link>
           <Grid>
           <Paper style={this.paperStyle} elevation={10}>
@@ -91,7 +91,7 @@ class Login extends Component {
             </Grid>
           </Paper>
         </Grid>
-      </>
+      </div>
     )
   }
 }

@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
-import { logout } from "../Redux_Store/actions/loginAction";
-
+import { logout } from "../../Redux_Store/actions/loginAction";
+import "./navbar.css"
 import { AppBar, Box, Toolbar, Typography } from "@material-ui/core";
 class Navbar extends Component {
  
@@ -20,7 +20,7 @@ class Navbar extends Component {
 
   render() {
     return (
-      <div>
+      <div className="myd-5 fixed-top">
         <Link to="/login" id="login"></Link>
         <Link to="/register" id="register"></Link>
 
@@ -33,7 +33,7 @@ class Navbar extends Component {
                 sx={{ flexGrow: 1 }}
                 style={{ flex: 1 }}
               >
-                News
+                <Link style={{textDecoration:"none",color:"white"}} to="/">Ecommerce</Link>
               </Typography>
               {!this.props.isLoggedin ? (
                 <div>

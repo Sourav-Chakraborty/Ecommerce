@@ -55,6 +55,8 @@ export default class App extends Component {
             alertMsg={this.state.alertMsg}
             alertShow={this.state.alertShow}
           />
+          <div className="Body">
+
           <Switch>
             <Route exact path="/">
               <Homepage />
@@ -78,6 +80,7 @@ export default class App extends Component {
               <ProductPage changeAlert={this.changeAlert}/>
             </Route>
           </Switch>
+          </div>
           <Footer />
         </Router>
       </div>
