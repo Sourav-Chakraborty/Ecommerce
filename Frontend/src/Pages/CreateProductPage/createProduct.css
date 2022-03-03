@@ -1,0 +1,27 @@
+.createProduct{
+    margin-top: 120px;
+    box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%) !important;
+    padding: 20px;
+}
+.createProductForm{
+    padding: 25px;
+    justify-content: center;
+    padding-left:15%; 
+}
+.formRow{
+    margin-bottom: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    width: 80%;
+    
+    justify-content: space-between
+    
+}
+.rowForDesc{
+    margin-left: 18%;
+}
+.btn-info{
+    background-color: #3f51b5 !important;
+    color: white;
+    border: none;
+}

@@ -9,6 +9,7 @@ import {
   AlertBox,
 } from "./Components";
 import Homepage from "./Pages/Homepage/Homepage";
+import CreateProduct from "./Pages/CreateProductPage/CreateProduct";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Footer from "./Components/Footer/Footer";
 import "./App.css";
@@ -56,30 +57,32 @@ export default class App extends Component {
             alertShow={this.state.alertShow}
           />
           <div className="Body">
-
-          <Switch>
-            <Route exact path="/">
-              <Homepage />
-            </Route>
-            <Route path="/login">
-              <Login changeAlert={this.changeAlert} />
-            </Route>
-            <Route path="/register">
-              <Register changeAlert={this.changeAlert} />
-            </Route>
-            <Route path="/dashboard">
-              <Dashboard changeAlert={this.changeAlert} />
-            </Route>
-            <Route path="/forget-password">
-              <ForgetPassword changeAlert={this.changeAlert} />
-            </Route>
-            <Route path="/changePassword">
-              <ChangePassword changeAlert={this.changeAlert} />
-            </Route>
-            <Route  path="/product/:id">
-              <ProductPage changeAlert={this.changeAlert}/>
-            </Route>
-          </Switch>
+            <Switch>
+              <Route exact path="/">
+                <Homepage />
+              </Route>
+              <Route path="/login">
+                <Login changeAlert={this.changeAlert} />
+              </Route>
+              <Route path="/register">
+                <Register changeAlert={this.changeAlert} />
+              </Route>
+              <Route path="/dashboard">
+                <Dashboard changeAlert={this.changeAlert} />
+              </Route>
+              <Route path="/forget-password">
+                <ForgetPassword changeAlert={this.changeAlert} />
+              </Route>
+              <Route path="/changePassword">
+                <ChangePassword changeAlert={this.changeAlert} />
+              </Route>
+              <Route path="/product/:id">
+                <ProductPage changeAlert={this.changeAlert} />
+              </Route>
+              <Route path="/createProduct">
+                <CreateProduct changeAlert={this.changeAlert} />
+              </Route>
+            </Switch>
           </div>
           <Footer />
         </Router>

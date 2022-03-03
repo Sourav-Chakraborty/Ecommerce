@@ -7,7 +7,6 @@ import { AppBar, Box, Toolbar, Typography } from "@material-ui/core";
 class Navbar extends Component {
  
   handleSignOut = () => {
-    console.log("Hello logout");
     localStorage.removeItem("token");
     this.props.logout();
     this.props.changeAlert(true, "success", "Sign out done");
@@ -58,6 +57,17 @@ class Navbar extends Component {
                     }}
                   >
                     Sign In
+                  </Link>
+                  <Link
+                    to="/createProduct"
+                    style={{
+                      color: "white",
+                      marginRight: "10px",
+                      textDecoration: "none",
+                      font: "caption",
+                    }}
+                  >
+                   Create Product
                   </Link>
                 </div>
               ) : (
