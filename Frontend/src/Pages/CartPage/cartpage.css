@@ -1,0 +1,22 @@
+.center{
+    text-align:center;
+}
+.cartList{
+    padding-top: 35px;
+}
+.cartFooter{
+    text-align: right;
+
+}
+.totalBtn{
+    background-color: #198754;
+    color: white;
+    font-size: large;
+    border: none;
+    margin-bottom: 20px;
+    margin-right: 15px;
+    padding: 10px;
+}
+.yellow{
+    color:"yellow"
+}

@@ -7,7 +7,7 @@ import ChangePassword from "./ChangePassword";
 import AlertBox from "./AlertBox";
 import Test from "./Test"
 import Footer from "./Footer/Footer";
-
+import CartItem from "./CartItem/CartItem";
 export{
     Navbar,
     Login,
@@ -17,5 +17,6 @@ export{
     ChangePassword,
     AlertBox,
     Test,
-    Footer
+    Footer,
+    CartItem
 }

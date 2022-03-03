@@ -1,0 +1,35 @@
+.cartItem{
+    display: flex;
+    flex-wrap: wrap;
+    border: 1px solid black;
+    height: 200px;
+    margin-bottom: 50px;
+}
+.cartItemLeft{
+    width: 80%;
+    height: 100%;
+    
+
+}
+.cartItemRight{
+    width: 20%;
+    
+    height: 100%;
+
+}
+
+.cartItemImg {
+    height: 80%;
+    width: 100%;
+    margin-left: 13px;
+    margin-bottom: 8px;
+}
+
+.productName{
+    margin-top: 15px;
+}
+.totalBtn{
+    padding: 5px;
+    height: 50px;
+
+}

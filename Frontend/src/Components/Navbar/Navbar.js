@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { logout } from "../../Redux_Store/actions/loginAction";
+import AddShoppingCartIcon from "@material-ui/icons/AddShoppingCart"
 import "./navbar.css"
 import { AppBar, Box, Toolbar, Typography } from "@material-ui/core";
 class Navbar extends Component {
@@ -36,6 +37,27 @@ class Navbar extends Component {
               </Typography>
               {!this.props.isLoggedin ? (
                 <div>
+               
+                      <Link  style={{
+                          color: "white",
+                          marginRight: "10px",
+                          textDecoration: "none",
+                          font: "caption",
+                        }} to="/cart"><AddShoppingCartIcon/><span className="cartItemNo">0</span> </Link>
+                       
+               
+                  
+                   <Link
+                    to="/createProduct"
+                    style={{
+                      color: "white",
+                      marginRight: "10px",
+                      textDecoration: "none",
+                      font: "caption",
+                    }}
+                  >
+                   Create Product
+                  </Link>
                   <Link
                     to="/register"
                     style={{
@@ -58,17 +80,7 @@ class Navbar extends Component {
                   >
                     Sign In
                   </Link>
-                  <Link
-                    to="/createProduct"
-                    style={{
-                      color: "white",
-                      marginRight: "10px",
-                      textDecoration: "none",
-                      font: "caption",
-                    }}
-                  >
-                   Create Product
-                  </Link>
+                 
                 </div>
               ) : (
                 <div>

@@ -9,6 +9,7 @@ import {
   AlertBox,
 } from "./Components";
 import Homepage from "./Pages/Homepage/Homepage";
+import CartPage from "./Pages/CartPage/CartPage";
 import CreateProduct from "./Pages/CreateProductPage/CreateProduct";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Footer from "./Components/Footer/Footer";
@@ -81,6 +82,9 @@ export default class App extends Component {
               </Route>
               <Route path="/createProduct">
                 <CreateProduct changeAlert={this.changeAlert} />
+              </Route>
+              <Route path="/cart">
+                <CartPage changeAlert={this.changeAlert} />
               </Route>
             </Switch>
           </div>
