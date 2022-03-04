@@ -1,6 +1,8 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../model/user");
+const Product=require("../model/product");
+const { findOne } = require("../model/user");
 const JSONSECRET = process.env.JSONSECRET;
 function generate(n = 6) {
   var add = 1,
@@ -172,6 +174,67 @@ const changePassword=async (req,res)=>{
 }
 
 
+const createProduct=async (req,res)=>{
+  const user=await User.findOne({email:req.user})
+  if(!user.isAdmin){
+    return res.json({msg:"You are not an admin"})
+  }
+  const {name,type,company,model,country,mfg,rating,desc,price}=req.body
+  const isProductExists=await Product.findOne({$and:[{name},{model}]})
+  if(isProductExists)
+    return res.json({msg:"Product already exists"})
+  const product=await Product.create({name,type,company,model,country,mfg,rating,desc,price})
+  res.json(product)
+  
+}
+
+const getProduct=async (req,res)=>{
+  const id=req.params.id
+  const product=await Product.findById(id)
+  res.json(product)
+}
+
+const addToCart=async (req,res)=>{
+  
+  const productId=req.params.id
+  let user=await User.findOne({email:req.user,"cart.productId":productId})
+  if(user)
+    return res.json({msg:"Already exists in cart"})
+  user=await User.findOne({email:req.user})
+
+  await user.updateOne({$push:{cart:{productId,qty:1}}})
+  res.json({msg:"added to cart"})
+
+}
+
+const getCartItems=async (req,res)=>{
+  const user=await User.findOne(({email:req.user}))
+  const cartItems=[]
+  for(let i=0;i<user.cart.length;i++){
+      let product=await Product.findById(user.cart[i].productId)    
+      cartItems.push({product,qty:user.cart[i].qty})
+  }
+  res.json(cartItems)
+
+}
+
+const editCartItem=async (req,res)=>{
+  const id=req.params.id
+  const no=req.params.no
+  await User.updateOne({email:req.user,"cart.productId":id},{$set:{'cart.$.qty':no}})
+  return res.json({msg:"updated"})
+}
+
+
+const removeFromCart=async (req,res)=>{
+  const user=await User.findOne({email:req.user})
+  const productId=req.params.id
+  
+  await User.updateOne({email:req.user,"cart.productId":productId},{$pull:{cart:{productId}}})
+  res.json({msg:"removed from cart"})
+
+}
+
 module.exports = {
   signUpController,
   signInController,
@@ -180,5 +243,11 @@ module.exports = {
   getUserData,
   editUserData,
   uploadImg,
-  changePassword
+  changePassword,
+  createProduct,
+  getProduct,
+  addToCart,
+  getCartItems,
+  editCartItem,
+  removeFromCart
 };

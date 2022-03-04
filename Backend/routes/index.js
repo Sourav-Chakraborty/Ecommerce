@@ -13,4 +13,11 @@ router.get("/getUser",fetchUser,controllers.getUserData)
 router.put("/editUser",fetchUser,controllers.editUserData)
 router.post("/uploadImg",fetchUser,controllers.uploadImg)
 router.put("/changePassword",fetchUser,controllers.changePassword)
+router.post("/createProduct",fetchUser,controllers.createProduct)
+router.get("/getProduct/:id",controllers.getProduct)
+router.put("/addToCart/:id",fetchUser,controllers.addToCart)
+router.put("/editCartItem/:id/:no",fetchUser,controllers.editCartItem)
+router.get("/getCartItems",fetchUser,controllers.getCartItems)
+router.put("/removeFromCart/:id",fetchUser,controllers.removeFromCart)
+
 module.exports=router

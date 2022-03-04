@@ -27,6 +27,14 @@ const user=new Schema({
     img:{
         type:String,
         default:""
+    },
+    cart:{
+        type:Array,
+        default:[]
+    },
+    isAdmin:{
+        type:Boolean,
+        default:false
     }
 })
 
