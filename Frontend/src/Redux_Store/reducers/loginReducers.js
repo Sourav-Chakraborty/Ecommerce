@@ -1,6 +1,6 @@
 const initialState={
     isLoggedin:false,
-    name:""
+    isAdmin:false
 }
 
 const loginReducers=(state=initialState,action)=>{
@@ -8,12 +8,12 @@ const loginReducers=(state=initialState,action)=>{
         case "SIGN_IN":
             return{
                 isLoggedin:true,
-                name:action.name
+                isAdmin:action.isAdmin
             }
         case "SIGN_OUT":
             return{
                 isLoggedin:false,
-                name:""
+                isAdmin:false
             }
         default:
             return state

@@ -1,7 +1,7 @@
-export const login=()=>{
+export const login=(isAdmin)=>{
     return {
         type:"SIGN_IN",
-        
+        isAdmin
     }
 }
 export const logout=()=>{

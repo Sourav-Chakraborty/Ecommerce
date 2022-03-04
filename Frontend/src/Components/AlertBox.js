@@ -9,7 +9,7 @@ export default class AlertBox extends Component {
     return (
       <div>
 
-           {alertShow && <Alert variant="filled" severity={alertType}>
+           {alertShow && <Alert style={{zIndex:"1000"}} variant="filled" severity={alertType}>
                 {alertMsg}
             </Alert>}
 

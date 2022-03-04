@@ -42,14 +42,14 @@ class Login extends Component {
  handleSubmit=async (e)=>{
 
     e.preventDefault()
-    console.log(this.state)
     const response=await axios.post("http://localhost:5000/signin",{
       email:this.state.email,
       password:this.state.password
     })
+    console.log("response is ",response)
     if(response.data.authToken){
       localStorage.setItem("token", response.data.authToken);
-      this.props.login()
+      this.props.login(response.data.isAdmin)
       document.getElementById("dashboard").click()
       this.props.changeAlert(true,"success","Log in Successful")
       setTimeout(()=>{
@@ -98,8 +98,8 @@ class Login extends Component {
 
 const mapDispatchToProps=(dispatch)=>{
   return{
-    login:()=>{
-        dispatch(login())
+    login:(isAdmin)=>{
+        dispatch(login(isAdmin))
     }
   }
 }

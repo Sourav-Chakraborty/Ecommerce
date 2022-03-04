@@ -3,17 +3,19 @@ import "./product.css"
 import {Link} from "react-router-dom"
 
 export default class Product extends Component {
+
   render() {
+    const {img,desc,name,id,price}=this.props
     return (
       <div className='productCard'>
           <div className="productImg">
-              <img className='productImg' src="https://images.pexels.com/photos/1092644/pexels-photo-1092644.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="" />
+              <img className='productImg' src={img} alt="" />
           </div>
           <div className="productBody">
-              <h5 className="productBodyHeader">Mobile</h5>
-                <h6 className="productBodyHeader">Rs 100</h6>
+              <h5 className="productBodyHeader">{name}</h5>
+                <h6 className="productBodyHeader">Rs {price}</h6>
               <p className="content">
-                  Lorem ipsum dolor sit amet consectetur, adipisicing elit. Lorem ipsum dolor  
+                  {desc} 
               </p>
               <div className="buttons">
                  <button className='mx-2 cardBtnGreen'>Add Cart</button> 

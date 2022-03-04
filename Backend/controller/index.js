@@ -21,7 +21,6 @@ function generate(n = 6) {
 
 const signUpController = async (req, res) => {
   const { name, email, password } = req.body;
-  console.log({ name, email, password })
   let user = await User.find({ email });
   if (user.length)
     return res.json({ msg: "Sorry user already exists" });
@@ -36,7 +35,7 @@ const signUpController = async (req, res) => {
   };
   const authToken = jwt.sign(data, JSONSECRET);
   console.log(data)
-  res.json({ authToken });
+  res.json({ authToken,isAdmin:false });
 };
 
 const signInController = async (req, res) => {
@@ -62,7 +61,7 @@ const signInController = async (req, res) => {
     
     const authToken = jwt.sign(data, JSONSECRET);
     
-    res.json({ authToken });
+    res.json({ authToken,isAdmin:user.isAdmin });
   
     
 
@@ -175,18 +174,42 @@ const changePassword=async (req,res)=>{
 
 
 const createProduct=async (req,res)=>{
-  const user=await User.findOne({email:req.user})
-  if(!user.isAdmin){
-    return res.json({msg:"You are not an admin"})
+  
+   const user=await User.findOne({email:req.user})
+   if(!user.isAdmin){
+     return res.json({msg:"You are not an admin"})
   }
-  const {name,type,company,model,country,mfg,rating,desc,price}=req.body
-  const isProductExists=await Product.findOne({$and:[{name},{model}]})
-  if(isProductExists)
-    return res.json({msg:"Product already exists"})
-  const product=await Product.create({name,type,company,model,country,mfg,rating,desc,price})
-  res.json(product)
+  const productImg=req.files.pImg
+  
+  const date=Date.now()+".jpg"
+  const imgPath=__dirname.slice(0,-19)+"/Frontend/public/"+date
+ 
+  productImg.mv(imgPath,async (err)=>{
+    if(err)
+      return console.log(err)
+    console.log("Uploaded")
+  }
+  )
+   const {name,type,company,model,country,mfg,rating,desc,price}=req.body
+    const isProductExists=await Product.findOne({$and:[{name},{model}]})
+
+     if(isProductExists)
+      return res.json({msg:"Product already exists"})
+
+ 
+  
+    const product=await Product.create({name,type,company,model,country,mfg,rating,desc,price,img:date})
+    // console.log(product,date)
+    res.json(product)
   
 }
+
+const getAllProducts=async (req,res)=>{
+  const product=await Product.find({})
+  res.json(product)
+}
+
+
 
 const getProduct=async (req,res)=>{
   const id=req.params.id
@@ -249,5 +272,6 @@ module.exports = {
   addToCart,
   getCartItems,
   editCartItem,
-  removeFromCart
+  removeFromCart,
+  getAllProducts
 };

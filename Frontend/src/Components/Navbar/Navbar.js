@@ -19,6 +19,7 @@ class Navbar extends Component {
   };
 
   render() {
+   
     return (
       <div className="myd-5 fixed-top">
         <Link to="/login" id="login"></Link>
@@ -35,19 +36,7 @@ class Navbar extends Component {
               >
                 <Link style={{textDecoration:"none",color:"white"}} to="/">Ecommerce</Link>
               </Typography>
-              {!this.props.isLoggedin ? (
-                <div>
-               
-                      <Link  style={{
-                          color: "white",
-                          marginRight: "10px",
-                          textDecoration: "none",
-                          font: "caption",
-                        }} to="/cart"><AddShoppingCartIcon/><span className="cartItemNo">0</span> </Link>
-                       
-               
-                  
-                   <Link
+              { this.props.isAdmin &&  <Link
                     to="/createProduct"
                     style={{
                       color: "white",
@@ -57,7 +46,20 @@ class Navbar extends Component {
                     }}
                   >
                    Create Product
-                  </Link>
+                  </Link>}
+              {!this.props.isLoggedin ? (
+                <div>
+               
+                    { (!this.props.isAdmin && this.props.isLoggedin) && <Link  style={{
+                          color: "white",
+                          marginRight: "10px",
+                          textDecoration: "none",
+                          font: "caption",
+                        }} to="/cart"><AddShoppingCartIcon/><span className="cartItemNo">0</span> </Link>
+                       }
+               
+                  
+                
                   <Link
                     to="/register"
                     style={{
@@ -85,7 +87,7 @@ class Navbar extends Component {
               ) : (
                 <div>
                 
-                  <Link
+                  <Link to="#"
                     onClick={this.handleSignOut}
                     style={{
                       color: "white",
@@ -107,9 +109,9 @@ class Navbar extends Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state)
   return {
     isLoggedin: state.loginReducers.isLoggedin,
+    isAdmin:state.loginReducers.isAdmin
     
   };
 };
