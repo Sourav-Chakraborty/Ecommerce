@@ -4,6 +4,7 @@ import { withRouter } from "react-router-dom";
 import axios from "axios";
 import "./productpage.css";
 import { connect } from "react-redux";
+import { incrementCartVal } from "../../Redux_Store/actions/cartAction";
 class ProductPage extends Component {
   constructor(props) {
     super(props);
@@ -59,10 +60,9 @@ class ProductPage extends Component {
     };
     const response=await axios.put(`http://localhost:5000/addToCart/${id}`,{},config)
     if(response.data.success){
-      
-      console.log("Added to cart")
+      this.props.incrementCart()   
     }
-    console.log(response)
+   
   };
 
   componentDidMount() {
@@ -147,4 +147,11 @@ const mapStateToProps = (state) => {
     isLoggedin: state.loginReducers.isLoggedin,
   };
 };
-export default connect(mapStateToProps)(withRouter(ProductPage));
+const mapDispatchToProps=(dispatch)=>{
+  return{
+    incrementCart:()=>{
+      dispatch(incrementCartVal())
+    }
+  }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(withRouter(ProductPage));

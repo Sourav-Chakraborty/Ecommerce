@@ -1,12 +1,15 @@
 import axios from "axios";
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 import { CartItem } from "../../Components";
 import { makeZero } from "../../Redux_Store/actions/counterActions";
 import "./cartpage.css";
 class CartPage extends Component {
   constructor(props) {
     super(props);
+    if(!this.props.isLoggedIn)
+      this.props.history.push("/login")
     this.props.makeZero();
     this.state = {
       cartItem: [],
@@ -44,12 +47,14 @@ class CartPage extends Component {
           <h2>Your Cart items</h2>
           <div className="cartList">
             {this.state.cartItem.map((cart, index) => {
-              
+             
               return (
                 <CartItem
                   key={index}
                   handleTotalChange={this.handleTotalChange}
                   cost={parseInt(cart.product.price)}
+                  name={cart.product.name}
+                  img={cart.product.img}
                 />
               );
             })}
@@ -68,6 +73,7 @@ class CartPage extends Component {
 }
 const mapStateToProps = (state) => {
   return {
+    isLoggedIn:state.loginReducers.isLoggedin,
     totalCost: state.cartAmount.val,
   };
 };
@@ -78,4 +84,4 @@ const mapDispatchToProps = (dispatch) => {
     },
   };
 };
-export default connect(mapStateToProps, mapDispatchToProps)(CartPage);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(CartPage));

@@ -231,9 +231,12 @@ const addToCart=async (req,res)=>{
 
 const getCartItems=async (req,res)=>{
   const user=await User.findOne(({email:req.user}))
+  console.log("From fast")
   const cartItems=[]
   for(let i=0;i<user.cart.length;i++){
       let product=await Product.findById(user.cart[i].productId)    
+      
+ 
       cartItems.push({product,qty:user.cart[i].qty})
   }
   res.json({cartItems})
