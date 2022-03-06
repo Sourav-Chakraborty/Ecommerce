@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { login } from '../Redux_Store/actions/loginAction';
 import { Avatar, Button, Grid, Paper, TextField } from "@material-ui/core";
 import {Link} from "react-router-dom"
-
+import {setCartVal} from "../Redux_Store/actions/cartAction"
 class Login extends Component {
 
   constructor(props){
@@ -46,10 +46,10 @@ class Login extends Component {
       email:this.state.email,
       password:this.state.password
     })
-    console.log("response is ",response)
     if(response.data.authToken){
       localStorage.setItem("token", response.data.authToken);
       this.props.login(response.data.isAdmin)
+      this.props.cartItem(response.data.cartItem)
       document.getElementById("dashboard").click()
       this.props.changeAlert(true,"success","Log in Successful")
       setTimeout(()=>{
@@ -100,6 +100,9 @@ const mapDispatchToProps=(dispatch)=>{
   return{
     login:(isAdmin)=>{
         dispatch(login(isAdmin))
+    },
+    cartItem:(val)=>{
+      dispatch(setCartVal(val))
     }
   }
 }

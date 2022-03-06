@@ -1,32 +1,58 @@
+import axios from "axios";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { CartItem } from "../../Components";
 import { makeZero } from "../../Redux_Store/actions/counterActions";
 import "./cartpage.css";
- class CartPage extends Component {
-   constructor(props){
-     super(props)
-     this.props.makeZero()
-   }
-  componentWillUnmount(){
-    this.props.makeZero()
+class CartPage extends Component {
+  constructor(props) {
+    super(props);
+    this.props.makeZero();
+    this.state = {
+      cartItem: [],
+    };
+  }
+
+  fetchCartitems = async () => {
+    const config = {
+      headers: {
+        "auth-token": localStorage.getItem("token"),
+      },
+    };
+    const response = await axios.get(
+      "http://localhost:5000/getCartItems",
+      config
+      );
+      console.log(response)
+    if (response.data.cartItems) {
+      this.setState((prevState) => {
+        prevState.cartItem = response.data.cartItems;
+        return prevState;
+      });
+    }
+  };
+  componentDidMount() {
+    this.fetchCartitems();
+  }
+  componentWillUnmount() {
+    this.props.makeZero();
   }
   render() {
-    const cartItem=[10000,10000,10000,10000]
     return (
-      
       <>
         <div className="center">
           <h2>Your Cart items</h2>
           <div className="cartList">
-            {
-              cartItem.map((cart,index)=>{
-                
-               return <CartItem key={index} handleTotalChange={this.handleTotalChange} cost={cart}/>
-
-              })
-            }
-           
+            {this.state.cartItem.map((cart, index) => {
+              
+              return (
+                <CartItem
+                  key={index}
+                  handleTotalChange={this.handleTotalChange}
+                  cost={parseInt(cart.product.price)}
+                />
+              );
+            })}
           </div>
         </div>
         <div className="cartFooter container">
@@ -40,16 +66,16 @@ import "./cartpage.css";
     );
   }
 }
-const mapStateToProps=(state)=>{
-  return{
-    totalCost:state.cartAmount.val
-  }
-}
-const mapDispatchToProps=(dispatch)=>{
+const mapStateToProps = (state) => {
   return {
-    makeZero:()=>{
-      dispatch(makeZero())
-    }
-  }
-}
-export default connect(mapStateToProps,mapDispatchToProps)(CartPage)
+    totalCost: state.cartAmount.val,
+  };
+};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    makeZero: () => {
+      dispatch(makeZero());
+    },
+  };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(CartPage);

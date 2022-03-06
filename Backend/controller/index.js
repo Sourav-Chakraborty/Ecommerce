@@ -35,7 +35,7 @@ const signUpController = async (req, res) => {
   };
   const authToken = jwt.sign(data, JSONSECRET);
   console.log(data)
-  res.json({ authToken,isAdmin:false });
+  res.json({ authToken,isAdmin:false,cartItem:0});
 };
 
 const signInController = async (req, res) => {
@@ -58,10 +58,10 @@ const signInController = async (req, res) => {
         email: email,
       },
     };
-    
+    const cartItem=user.cart.length
     const authToken = jwt.sign(data, JSONSECRET);
-    
-    res.json({ authToken,isAdmin:user.isAdmin });
+    console.log("no of item in cart",cartItem)
+    res.json({ authToken,isAdmin:user.isAdmin,cartItem});
   
     
 
@@ -149,7 +149,6 @@ const uploadImg=async (req,res)=>{
 
    const date=Date.now()+".jpg"
   const imgPath=__dirname.slice(0,-19)+"/Frontend/public/"+date
-  // const imgPath="../../Frontend/public/"+date
   profileImg.mv(imgPath,async (err)=>{
     if(err)
       return console.log(err)
@@ -226,7 +225,7 @@ const addToCart=async (req,res)=>{
   user=await User.findOne({email:req.user})
 
   await user.updateOne({$push:{cart:{productId,qty:1}}})
-  res.json({msg:"added to cart"})
+  res.json({msg:"added to cart",success:true})
 
 }
 
@@ -237,7 +236,7 @@ const getCartItems=async (req,res)=>{
       let product=await Product.findById(user.cart[i].productId)    
       cartItems.push({product,qty:user.cart[i].qty})
   }
-  res.json(cartItems)
+  res.json({cartItems})
 
 }
 

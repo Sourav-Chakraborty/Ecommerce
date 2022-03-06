@@ -19,7 +19,7 @@ class Navbar extends Component {
   };
 
   render() {
-   
+    console.log(this.props.cartItem)
     return (
       <div className="myd-5 fixed-top">
         <Link to="/login" id="login"></Link>
@@ -36,6 +36,14 @@ class Navbar extends Component {
               >
                 <Link style={{textDecoration:"none",color:"white"}} to="/">Ecommerce</Link>
               </Typography>
+              
+             {(this.props.isLoggedin && !this.props.isAdmin ) && <Link style={{
+                          color: "white",
+                          marginRight: "10px",
+                          textDecoration: "none",
+                          font: "caption",
+              }} to="/cart"><AddShoppingCartIcon/><span className="cartItemNo">{this.props.cartItem}</span> </Link>}
+                       
               { this.props.isAdmin &&  <Link
                     to="/createProduct"
                     style={{
@@ -50,13 +58,6 @@ class Navbar extends Component {
               {!this.props.isLoggedin ? (
                 <div>
                
-                    { (!this.props.isAdmin && this.props.isLoggedin) && <Link  style={{
-                          color: "white",
-                          marginRight: "10px",
-                          textDecoration: "none",
-                          font: "caption",
-                        }} to="/cart"><AddShoppingCartIcon/><span className="cartItemNo">0</span> </Link>
-                       }
                
                   
                 
@@ -109,10 +110,11 @@ class Navbar extends Component {
 }
 
 const mapStateToProps = (state) => {
+  console.log(state)
   return {
     isLoggedin: state.loginReducers.isLoggedin,
-    isAdmin:state.loginReducers.isAdmin
-    
+    isAdmin:state.loginReducers.isAdmin,
+    cartItem:state.cartItemNoReducers.item
   };
 };
 const mapDispatchToProps = (dispatch) => {

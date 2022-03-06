@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import "./product.css"
 import {Link} from "react-router-dom"
+import { connect } from "react-redux";
 
-export default class Product extends Component {
+ class Product extends Component {
 
   render() {
     const {img,desc,name,id,price}=this.props
@@ -15,15 +16,21 @@ export default class Product extends Component {
               <h5 className="productBodyHeader">{name}</h5>
                 <h6 className="productBodyHeader">Rs {price}</h6>
               <p className="content">
-                  {desc} 
+                   {desc.length>50? desc.slice(0,50)+"...": desc}
               </p>
               <div className="buttons">
-                 <button className='mx-2 cardBtnGreen'>Add Cart</button> 
-                 <Link className='mx-2 cardBtnRed' to="/product/100">view</Link> 
-
+                <button className='mx-2 cardBtnGreen' disabled={!this.props.isLoggedin && true}>Add Cart</button> 
+                 <Link className='mx-2 cardBtnRed' to={`/product/${id}`}>view</Link> 
               </div>
           </div>
       </div>
     )
   }
 }
+const mapStateToProps=(state)=>{
+  return {
+    isLoggedin:state.loginReducers.isLoggedin
+  }
+}
+
+export default connect(mapStateToProps)(Product)
