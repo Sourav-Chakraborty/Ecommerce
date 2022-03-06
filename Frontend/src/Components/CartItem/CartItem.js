@@ -23,9 +23,13 @@ class CartItem extends Component {
   componentDidMount(){
     this.props.add(this.props.cost)
   }
- 
+  handleDelete=()=>{
+    const id=this.props.id
+    this.props.deleteCartItem(id)
+  }
   
   render() {
+   
     const arrayOfNo = Array.from({ length: 20 }, (_, i) => i + 1);
     return (
       <div className="cartItem container">
@@ -41,7 +45,7 @@ class CartItem extends Component {
             Need to pay: Rs  
             <span style={{ color: "red" }}>{this.state.qty * this.state.cost}</span>
           </h2>
-          <button type="button" class="btn btn-danger my-4">
+          <button type="button" class="btn btn-danger my-4" onClick={this.handleDelete}>
             remove from cart 
           </button>
         </div>

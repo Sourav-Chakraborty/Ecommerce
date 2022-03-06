@@ -252,10 +252,12 @@ const editCartItem=async (req,res)=>{
 
 
 const removeFromCart=async (req,res)=>{
-  const user=await User.findOne({email:req.user})
+
+ 
   const productId=req.params.id
   
-  await User.updateOne({email:req.user,"cart.productId":productId},{$pull:{cart:{productId}}})
+  const user=await User.updateOne({email:req.user,"cart.productId":productId},{$pull:{cart:{productId}}})
+  console.log(user)
   res.json({msg:"removed from cart"})
 
 }

@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { CartItem } from "../../Components";
 import { makeZero } from "../../Redux_Store/actions/counterActions";
+import {decrementCartVal} from "../../Redux_Store/actions/cartAction"
 import "./cartpage.css";
 class CartPage extends Component {
   constructor(props) {
@@ -14,8 +15,20 @@ class CartPage extends Component {
     this.state = {
       cartItem: [],
     };
+    this.deleteCartItem.bind(this)
   }
+  deleteCartItem=async (id)=>{
+    const config = {
+      headers: {
+        "auth-token": localStorage.getItem("token"),
+      },
+    };
+    const response = await axios.put(
+      `http://localhost:5000/removeFromCart/${id}`,{},config)
+    this.props.decrementCart()
+    this.fetchCartitems()
 
+  }
   fetchCartitems = async () => {
     const config = {
       headers: {
@@ -47,14 +60,15 @@ class CartPage extends Component {
           <h2>Your Cart items</h2>
           <div className="cartList">
             {this.state.cartItem.map((cart, index) => {
-             
               return (
                 <CartItem
+                  id={cart.product._id}
                   key={index}
                   handleTotalChange={this.handleTotalChange}
                   cost={parseInt(cart.product.price)}
                   name={cart.product.name}
                   img={cart.product.img}
+                  deleteCartItem={this.deleteCartItem}
                 />
               );
             })}
@@ -82,6 +96,9 @@ const mapDispatchToProps = (dispatch) => {
     makeZero: () => {
       dispatch(makeZero());
     },
+    decrementCart:()=>{
+      dispatch(decrementCartVal())
+    }
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(CartPage));
