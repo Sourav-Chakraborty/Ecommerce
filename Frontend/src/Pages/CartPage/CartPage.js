@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { CartItem } from "../../Components";
-import { makeZero } from "../../Redux_Store/actions/counterActions";
+import { makeZero,add } from "../../Redux_Store/actions/counterActions";
 import {decrementCartVal} from "../../Redux_Store/actions/cartAction"
 import "./cartpage.css";
 class CartPage extends Component {
@@ -17,7 +17,7 @@ class CartPage extends Component {
     };
     this.deleteCartItem.bind(this)
   }
-  deleteCartItem=async (id)=>{
+  deleteCartItem=async (id,amount)=>{
     const config = {
       headers: {
         "auth-token": localStorage.getItem("token"),
@@ -26,6 +26,7 @@ class CartPage extends Component {
     const response = await axios.put(
       `http://localhost:5000/removeFromCart/${id}`,{},config)
     this.props.decrementCart()
+    this.props.add(-amount)
     this.fetchCartitems()
 
   }
@@ -95,6 +96,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     makeZero: () => {
       dispatch(makeZero());
+    },
+    add:(amount)=>{
+      dispatch(add(amount))
     },
     decrementCart:()=>{
       dispatch(decrementCartVal())

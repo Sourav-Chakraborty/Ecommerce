@@ -25,7 +25,8 @@ class CartItem extends Component {
   }
   handleDelete=()=>{
     const id=this.props.id
-    this.props.deleteCartItem(id)
+    const amount=this.state.qty * this.state.cost
+    this.props.deleteCartItem(id,amount)
   }
   
   render() {
