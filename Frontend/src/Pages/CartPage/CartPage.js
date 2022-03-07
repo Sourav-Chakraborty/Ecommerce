@@ -64,6 +64,7 @@ class CartPage extends Component {
             {this.state.cartItem.map((cart, index) => {
               return (
                 <CartItem
+                  qty={cart.qty}
                   id={cart.product._id}
                   key={index}
                   handleTotalChange={this.handleTotalChange}

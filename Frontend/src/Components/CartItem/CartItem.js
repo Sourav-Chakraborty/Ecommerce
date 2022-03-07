@@ -3,13 +3,24 @@ import React, { Component } from "react";
 import "./cartitem.css";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+
 class CartItem extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      cost:this.props.cost,
-      qty: 1,
+      cost:0,
+      qty: 0,
     };
+  }
+  static getDerivedStateFromProps(props,state){
+    if(props.cost!==state.cost){
+      console.log("state value changed")
+      return {
+        cost:parseInt(props.cost),
+        qty:parseInt(props.qty)
+      }
+    }
+    return null
   }
   handleChange = (e) => {
     const n = e.target.value;
@@ -22,17 +33,20 @@ class CartItem extends Component {
     this.props.add(changeInAmount)
   }
   componentDidMount(){
-    this.props.add(this.props.cost)
+    this.props.add(this.props.cost*this.props.qty)
   }
   handleDelete=()=>{
     const id=this.props.id
     const amount=this.state.qty * this.state.cost
     this.props.deleteCartItem(id,amount)
   }
-  
+  componentDidUpdate(){
+    console.log("component updated")
+  }
   render() {
     
-    
+    console.log(this.state)
+    const amount=this.state.cost * this.state.qty
     const arrayOfNo = Array.from({ length: 20 }, (_, i) => i + 1);
     return (
       <div className="cartItem container">
@@ -47,9 +61,9 @@ class CartItem extends Component {
           <p>Price {this.props.cost} rupees per qty</p>
           <h2>
             Need to pay: Rs  
-            <span style={{ color: "red" }}>{this.state.qty * this.props.cost}</span>
+            <span style={{ color: "red" }}>{amount}</span>
           </h2>
-          <button type="button" class="btn btn-danger my-4" onClick={this.handleDelete}>
+          <button type="button" className="btn btn-danger my-4" onClick={this.handleDelete}>
             remove from cart 
           </button>
         </div>
@@ -60,7 +74,7 @@ class CartItem extends Component {
             alt=""
           />
 
-          <select onChange={this.handleChange} name="qty" id="cars">
+          <select onChange={this.handleChange} value={this.state.qty} name="qty" id="cars">
             {arrayOfNo.map((N) => (
               <option key={N} value={N}>
                 {N}
