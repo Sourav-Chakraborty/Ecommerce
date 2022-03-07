@@ -46,6 +46,7 @@ class CartPage extends Component {
         prevState.cartItem = response.data.cartItems;
         return prevState;
       });
+      console.log("cart items ",response.data.cartItems)
     }
   };
   componentDidMount() {

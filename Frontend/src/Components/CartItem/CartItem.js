@@ -2,6 +2,7 @@ import {add} from "../../Redux_Store/actions/counterActions"
 import React, { Component } from "react";
 import "./cartitem.css";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 class CartItem extends Component {
   constructor(props) {
     super(props);
@@ -30,21 +31,23 @@ class CartItem extends Component {
   }
   
   render() {
-   
+    
+    
     const arrayOfNo = Array.from({ length: 20 }, (_, i) => i + 1);
     return (
       <div className="cartItem container">
         <div className="cartItemLeft">
+         
           <h5
             className="productName"
             style={{ display: "inline", marginTop: "10px" }}
           >
             {this.props.name}
           </h5>
-          <p>Price {this.state.cost} rupees per qty</p>
+          <p>Price {this.props.cost} rupees per qty</p>
           <h2>
             Need to pay: Rs  
-            <span style={{ color: "red" }}>{this.state.qty * this.state.cost}</span>
+            <span style={{ color: "red" }}>{this.state.qty * this.props.cost}</span>
           </h2>
           <button type="button" class="btn btn-danger my-4" onClick={this.handleDelete}>
             remove from cart 
