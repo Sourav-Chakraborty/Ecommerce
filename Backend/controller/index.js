@@ -1,8 +1,9 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../model/user");
-const Product=require("../model/product");
-const Address=require("../model/address")
+const Product = require("../model/product");
+const paypal = require('paypal-rest-sdk');
+const Address = require("../model/address");
 const { findOne } = require("../model/user");
 const JSONSECRET = process.env.JSONSECRET;
 function generate(n = 6) {
@@ -23,8 +24,7 @@ function generate(n = 6) {
 const signUpController = async (req, res) => {
   const { name, email, password } = req.body;
   let user = await User.find({ email });
-  if (user.length)
-    return res.json({ msg: "Sorry user already exists" });
+  if (user.length) return res.json({ msg: "Sorry user already exists" });
   const salt = bcrypt.genSaltSync(10);
   const hash = bcrypt.hashSync(password, salt);
 
@@ -35,45 +35,37 @@ const signUpController = async (req, res) => {
     },
   };
   const authToken = jwt.sign(data, JSONSECRET);
-  console.log(data)
-  res.json({ authToken,isAdmin:false,cartItem:0});
+  console.log(data);
+  res.json({ authToken, isAdmin: false, cartItem: 0 });
 };
 
 const signInController = async (req, res) => {
+  const { email, password } = req.body;
 
- 
-    const { email, password } = req.body;
-   
-   
-    let user = await User.findOne({ email });
-    
-    if (!user)
-      return res.json({ msg: "Invalid user name or password" });
+  let user = await User.findOne({ email });
 
-    const compairPassword = await bcrypt.compare(password, user.password);
+  if (!user) return res.json({ msg: "Invalid user name or password" });
 
-    if (!compairPassword)
-      return res.json({ msg: "Invalid user name or password" });
-    const data = {
-      user: {
-        email: email,
-      },
-    };
-    const cartItem=user.cart.length
-    const authToken = jwt.sign(data, JSONSECRET);
-    console.log("no of item in cart",cartItem)
-    res.json({ authToken,isAdmin:user.isAdmin,cartItem});
-  
-    
+  const compairPassword = await bcrypt.compare(password, user.password);
 
+  if (!compairPassword)
+    return res.json({ msg: "Invalid user name or password" });
+  const data = {
+    user: {
+      email: email,
+    },
+  };
+  const cartItem = user.cart.length;
+  const authToken = jwt.sign(data, JSONSECRET);
+  console.log("no of item in cart", cartItem);
+  res.json({ authToken, isAdmin: user.isAdmin, cartItem });
 };
 
 const forgetPassword = async (req, res) => {
   const { email } = req.body;
   const randomNumber = generate();
   let user = await User.find({ email });
-  if (!user.length)
-    return res.json({ msg: "Email is not registered with us" });
+  if (!user.length) return res.json({ msg: "Email is not registered with us" });
   await User.updateOne({ email }, { passCodeForForgetPassword: randomNumber });
   console.log(randomNumber);
   setTimeout(async () => {
@@ -88,7 +80,7 @@ const changeOldPasswordForgetPassword = async (req, res) => {
   console.log(user);
   if (user === undefined)
     return res.status(401).json({ msg: "An error occured" });
-  const userToken =token;
+  const userToken = token;
   if (user.passCodeForForgetPassword != userToken)
     return res.status(400).json({ msg: "Token didn't match" });
   const salt = bcrypt.genSaltSync(10);
@@ -104,34 +96,35 @@ const changeOldPasswordForgetPassword = async (req, res) => {
   res.json({ authToken });
 };
 
+const getUserData = async (req, res) => {
+  const userInfo = await User.findOne({ email: req.user });
+  const { name, email, img, ...otherInfo } = userInfo;
+  res.json({ name, email, img });
+};
 
-const getUserData=async (req,res)=>{
+const editUserData = async (req, res) => {
+  const { email, name } = req.body;
+  if (req.user !== email) {
+    const user = await User.findOne({ email });
+    if (user) return res.json({ msg: "email already exists" });
+    const userUpdated = await User.findOneAndUpdate(
+      { email: req.user },
+      { email, name: name }
+    );
 
-  const userInfo= await User.findOne({email:req.user})
-  const {name,email,img,...otherInfo}=userInfo
-  res.json({name,email,img})
-
-
-}
-
-const editUserData=async (req,res)=>{
-  const {email,name}=req.body
-  if(req.user!==email){
-    const user=await User.findOne({email})
-    if(user)
-      return res.json({msg:"email already exists"})
-    const userUpdated=await User.findOneAndUpdate({email:req.user},{email,name:name})
-    
     const data = {
       user: {
         email: email,
       },
     };
     const authToken = jwt.sign(data, JSONSECRET);
-  
-   return res.json({authToken });
+
+    return res.json({ authToken });
   }
-  const userUpdated=await User.findOneAndUpdate({email:req.user},{name:name})
+  const userUpdated = await User.findOneAndUpdate(
+    { email: req.user },
+    { name: name }
+  );
   const data = {
     user: {
       email: email,
@@ -140,156 +133,200 @@ const editUserData=async (req,res)=>{
   const authToken = jwt.sign(data, JSONSECRET);
 
   res.json({ authToken });
-  
+};
 
-  
-}
+const uploadImg = async (req, res) => {
+  const profileImg = req.files.profile;
 
-const uploadImg=async (req,res)=>{
-   const profileImg=req.files.profile
+  const date = Date.now() + ".jpg";
+  const imgPath = __dirname.slice(0, -19) + "/Frontend/public/" + date;
+  profileImg.mv(imgPath, async (err) => {
+    if (err) return console.log(err);
+    await User.findOneAndUpdate({ email: req.user }, { img: date });
+    res.json({ img: date });
+  });
+};
 
-   const date=Date.now()+".jpg"
-  const imgPath=__dirname.slice(0,-19)+"/Frontend/public/"+date
-  profileImg.mv(imgPath,async (err)=>{
-    if(err)
-      return console.log(err)
-    await User.findOneAndUpdate({email:req.user},{img:date})
-    res.json({img:date})
-  })
-
-}
-
-const changePassword=async (req,res)=>{
-  const {oldPass,newPass}=req.body
-  const user=await User.findOne({email:req.user})
+const changePassword = async (req, res) => {
+  const { oldPass, newPass } = req.body;
+  const user = await User.findOne({ email: req.user });
   const compairPassword = await bcrypt.compare(oldPass, user.password);
 
-  if (!compairPassword)
-    return res.json({wrongPass:true });
+  if (!compairPassword) return res.json({ wrongPass: true });
   const salt = bcrypt.genSaltSync(10);
   const hash = bcrypt.hashSync(newPass, salt);
-  await User.findOneAndUpdate({email:req.user},{password:hash})
-  res.json({msg:"password changed successfully"})
-}
+  await User.findOneAndUpdate({ email: req.user }, { password: hash });
+  res.json({ msg: "password changed successfully" });
+};
 
-
-const createProduct=async (req,res)=>{
-  
-   const user=await User.findOne({email:req.user})
-   if(!user.isAdmin){
-     return res.json({msg:"You are not an admin"})
+const createProduct = async (req, res) => {
+  const user = await User.findOne({ email: req.user });
+  if (!user.isAdmin) {
+    return res.json({ msg: "You are not an admin" });
   }
-  const productImg=req.files.pImg
-  
-  const date=Date.now()+".jpg"
-  const imgPath=__dirname.slice(0,-19)+"/Frontend/public/"+date
- 
-  productImg.mv(imgPath,async (err)=>{
-    if(err)
-      return console.log(err)
-    console.log("Uploaded")
+  const productImg = req.files.pImg;
+
+  const date = Date.now() + ".jpg";
+  const imgPath = __dirname.slice(0, -19) + "/Frontend/public/" + date;
+
+  productImg.mv(imgPath, async (err) => {
+    if (err) return console.log(err);
+    console.log("Uploaded");
+  });
+  const { name, type, company, model, country, mfg, rating, desc, price } =
+    req.body;
+  const isProductExists = await Product.findOne({
+    $and: [{ name }, { model }],
+  });
+
+  if (isProductExists) return res.json({ msg: "Product already exists" });
+
+  const product = await Product.create({
+    name,
+    type,
+    company,
+    model,
+    country,
+    mfg,
+    rating,
+    desc,
+    price,
+    img: date,
+  });
+  // console.log(product,date)
+  res.json(product);
+};
+
+const getAllProducts = async (req, res) => {
+  const product = await Product.find({});
+  res.json(product);
+};
+
+const getProduct = async (req, res) => {
+  const id = req.params.id;
+  const product = await Product.findById(id);
+  res.json(product);
+};
+
+const addToCart = async (req, res) => {
+  const productId = req.params.id;
+  let user = await User.findOne({
+    email: req.user,
+    "cart.productId": productId,
+  });
+  if (user) return res.json({ msg: "Already exists in cart" });
+  user = await User.findOne({ email: req.user });
+
+  await user.updateOne({ $push: { cart: { productId, qty: 1 } } });
+  res.json({ msg: "added to cart", success: true });
+};
+
+const getCartItems = async (req, res) => {
+  const user = await User.findOne({ email: req.user });
+  console.log("From fast");
+  const cartItems = [];
+  for (let i = 0; i < user.cart.length; i++) {
+    let product = await Product.findById(user.cart[i].productId);
+
+    cartItems.push({ product, qty: user.cart[i].qty });
   }
-  )
-   const {name,type,company,model,country,mfg,rating,desc,price}=req.body
-    const isProductExists=await Product.findOne({$and:[{name},{model}]})
+  res.json({ cartItems });
+};
 
-     if(isProductExists)
-      return res.json({msg:"Product already exists"})
+const editCartItem = async (req, res) => {
+  const id = req.params.id;
+  const no = req.params.no;
+  await User.updateOne(
+    { email: req.user, "cart.productId": id },
+    { $set: { "cart.$.qty": no } }
+  );
+  return res.json({ msg: "updated" });
+};
 
- 
-  
-    const product=await Product.create({name,type,company,model,country,mfg,rating,desc,price,img:date})
-    // console.log(product,date)
-    res.json(product)
-  
-}
+const removeFromCart = async (req, res) => {
+  const productId = req.params.id;
 
-const getAllProducts=async (req,res)=>{
-  const product=await Product.find({})
-  res.json(product)
-}
+  const user = await User.updateOne(
+    { email: req.user, "cart.productId": productId },
+    { $pull: { cart: { productId } } }
+  );
 
+  res.json({ msg: "removed from cart" });
+};
 
+const returnCartTotal = async (req, res) => {
+  const user = await User.findOne({ email: req.user });
 
-const getProduct=async (req,res)=>{
-  const id=req.params.id
-  const product=await Product.findById(id)
-  res.json(product)
-}
-
-const addToCart=async (req,res)=>{
-  
-  const productId=req.params.id
-  let user=await User.findOne({email:req.user,"cart.productId":productId})
-  if(user)
-    return res.json({msg:"Already exists in cart"})
-  user=await User.findOne({email:req.user})
-
-  await user.updateOne({$push:{cart:{productId,qty:1}}})
-  res.json({msg:"added to cart",success:true})
-
-}
-
-const getCartItems=async (req,res)=>{
-  const user=await User.findOne(({email:req.user}))
-  console.log("From fast")
-  const cartItems=[]
-  for(let i=0;i<user.cart.length;i++){
-      let product=await Product.findById(user.cart[i].productId)    
-      
- 
-      cartItems.push({product,qty:user.cart[i].qty})
+  let cartTotal = 0;
+  for (let i = 0; i < user.cart.length; i++) {
+    let product = await Product.findById(user.cart[i].productId);
+    const totalPrice = parseInt(product.price);
+    cartTotal += totalPrice * parseInt(user.cart[i].qty);
   }
-  res.json({cartItems})
+  res.json({ cartTotal });
+};
 
-}
+const addAdress = async (req, res) => {
+  const { name, mobile, address } = req.body;
+  const email = req.user;
+  const newAddress = await Address.updateOne(
+    { email },
+    { name, mobile, address },
+    { upsert: true, new: true }
+  );
+  console.log(newAddress);
+  res.json({ msg: "Address set successfully", success: true });
+};
+const getAddress = async (req, res) => {
+  const address = await Address.findOne({ email: req.user });
+  res.json(address);
+};
 
-const editCartItem=async (req,res)=>{
-  const id=req.params.id
-  const no=req.params.no
-  await User.updateOne({email:req.user,"cart.productId":id},{$set:{'cart.$.qty':no}})
-  return res.json({msg:"updated"})
-}
-
-
-const removeFromCart=async (req,res)=>{
-
- 
-  const productId=req.params.id
+const payWithPaypal = (req, res) => {
+  console.log("From payments routes");
+  const create_payment_json = {
+    intent: "sale",
+    payer: {
+      payment_method: "paypal",
+    },
+    redirect_urls: {
+      return_url: "http://localhost:5000/success",
+      cancel_url: "http://localhost:5000/cancel",
+    },
+    transactions: [
+      {
+        item_list: {
+          items: [
+            {
+              name: "Red Sox Hat",
+              sku: "001",
+              price: "25.00",
+              currency: "USD",
+              quantity: 1,
+            },
+          ],
+        },
+        amount: {
+          currency: "USD",
+          total: "25.00",
+        },
+        description: "Hat for the best team ever",
+      },
+    ],
+  };
   
-  const user=await User.updateOne({email:req.user,"cart.productId":productId},{$pull:{cart:{productId}}})
-  
-  res.json({msg:"removed from cart"})
-
-}
-
-
-const returnCartTotal=async  (req,res)=>{
-  const user=await User.findOne(({email:req.user}))
- 
-  let cartTotal=0
-  for(let i=0;i<user.cart.length;i++){
-      let product=await Product.findById(user.cart[i].productId)    
-      const totalPrice=parseInt(product.price)
-      cartTotal+=(totalPrice*(parseInt(user.cart[i].qty)))
-  }
-  res.json({cartTotal})
-}
-
-
-
-const addAdress=async (req,res)=>{
-  const {name,mobile,address}=req.body
-  const email=req.user
-  const newAddress=await Address.updateOne({email},{name,mobile,address},{upsert:true,new: true})
-  console.log(newAddress)
-  res.json({msg:"Address set successfully",success:true})
-}
-const getAddress=async (req,res)=>{
-    const address=await Address.findOne({email:req.user})
-    res.json(address)
-}
-
+  paypal.payment.create(create_payment_json, function (error, payment) {
+    if (error) {
+      throw error;
+    } else {
+      for (let i = 0; i < payment.links.length; i++) {
+        if (payment.links[i].rel === "approval_url") {
+          res.redirect(payment.links[i].href,{},{"Access-Control-Allow-Credentials": true});
+        }
+      }
+    }
+  });
+};
 module.exports = {
   signUpController,
   signInController,
@@ -308,5 +345,6 @@ module.exports = {
   getAllProducts,
   addAdress,
   getAddress,
-  returnCartTotal
+  returnCartTotal,
+  payWithPaypal,
 };

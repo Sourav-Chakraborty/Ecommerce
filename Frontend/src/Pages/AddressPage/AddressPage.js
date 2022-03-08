@@ -70,7 +70,7 @@ class AddressPage extends Component {
       },
     };
     const response=await axios.post("http://localhost:5000/addAddress",{name:this.state.name,mobile:this.state.mobile,address:this.state.address},config)
-    console.log(response)
+    this.props.history.push("/pay")
   }
  
  
