@@ -20,5 +20,7 @@ router.put("/addToCart/:id",fetchUser,controllers.addToCart)
 router.put("/editCartItem/:id/:no",fetchUser,controllers.editCartItem)
 router.get("/getCartItems",fetchUser,controllers.getCartItems)
 router.put("/removeFromCart/:id",fetchUser,controllers.removeFromCart)
-
+router.post("/addAddress",fetchUser,controllers.addAdress)
+router.get("/getAddress",fetchUser,controllers.getAddress)
+router.get("/totalCartPrice",fetchUser,controllers.returnCartTotal)
 module.exports=router

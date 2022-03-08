@@ -2,6 +2,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../model/user");
 const Product=require("../model/product");
+const Address=require("../model/address")
 const { findOne } = require("../model/user");
 const JSONSECRET = process.env.JSONSECRET;
 function generate(n = 6) {
@@ -257,9 +258,35 @@ const removeFromCart=async (req,res)=>{
   const productId=req.params.id
   
   const user=await User.updateOne({email:req.user,"cart.productId":productId},{$pull:{cart:{productId}}})
-  console.log(user)
+  
   res.json({msg:"removed from cart"})
 
+}
+
+
+const returnCartTotal=async  (req,res)=>{
+  const user=await User.findOne(({email:req.user}))
+ 
+  let cartTotal=0
+  for(let i=0;i<user.cart.length;i++){
+      let product=await Product.findById(user.cart[i].productId)    
+      const totalPrice=parseInt(product.price)
+      cartTotal+=(totalPrice*(parseInt(user.cart[i].qty)))
+  }
+  res.json({cartTotal})
+}
+
+
+
+const addAdress=async (req,res)=>{
+  const {name,phone,address}=req.body
+  const email=req.user
+  const newAddress=await Address.create({email,name,phone,address})
+  res.json(newAddress)
+}
+const getAddress=async (req,res)=>{
+    const address=await Address.findOne({email:req.user})
+    res.json(address)
 }
 
 module.exports = {
@@ -277,5 +304,8 @@ module.exports = {
   getCartItems,
   editCartItem,
   removeFromCart,
-  getAllProducts
+  getAllProducts,
+  addAdress,
+  getAddress,
+  returnCartTotal
 };

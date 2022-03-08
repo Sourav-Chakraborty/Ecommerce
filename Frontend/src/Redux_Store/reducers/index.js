@@ -6,6 +6,8 @@ import cartItemNoReducers from "./cartItemNo";
 const allReducers=combineReducers({
     loginReducers,
     cartAmount,
-    cartItemNoReducers
+    cartItemNoReducers,
+    
 })
 export default allReducers
+

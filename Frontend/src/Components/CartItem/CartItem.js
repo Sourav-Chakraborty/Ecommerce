@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import "./cartitem.css";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 class CartItem extends Component {
   constructor(props) {
@@ -22,15 +23,24 @@ class CartItem extends Component {
     }
     return null
   }
-  handleChange = (e) => {
+  handleChange = async (e) => {
     const n = e.target.value;
     const prevN=this.state.qty
     this.setState((prevstate) => {
       prevstate.qty = n;
       return prevstate;
     });
+
     const changeInAmount=(n-prevN)*this.state.cost
     this.props.add(changeInAmount)
+    const configure={
+      headers: {
+        "auth-token": localStorage.getItem("token"),
+      },
+    }
+    const response=await axios.put(`http://localhost:5000/editCartItem/${this.props.id}/${n}`,{},configure)
+    console.log(response)
+
   }
   componentDidMount(){
     this.props.add(this.props.cost*this.props.qty)
@@ -45,7 +55,7 @@ class CartItem extends Component {
   }
   render() {
     
-    console.log(this.state)
+    
     const amount=this.state.cost * this.state.qty
     const arrayOfNo = Array.from({ length: 20 }, (_, i) => i + 1);
     return (
