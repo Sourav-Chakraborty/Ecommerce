@@ -78,7 +78,7 @@ class CartPage extends Component {
           </div>
         </div>
         <div className="cartFooter container">
-          <button className="totalBtn btn btn-success">
+          <button className="totalBtn btn btn-success" onClick={()=> this.props.history.push("/address")}>
             Total Cost Rs{" "}
             <span style={{ color: "yellow" }}>{this.props.totalCost}</span>
             ,click to proceed

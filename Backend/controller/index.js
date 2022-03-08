@@ -279,10 +279,11 @@ const returnCartTotal=async  (req,res)=>{
 
 
 const addAdress=async (req,res)=>{
-  const {name,phone,address}=req.body
+  const {name,mobile,address}=req.body
   const email=req.user
-  const newAddress=await Address.create({email,name,phone,address})
-  res.json(newAddress)
+  const newAddress=await Address.updateOne({email},{name,mobile,address},{upsert:true,new: true})
+  console.log(newAddress)
+  res.json({msg:"Address set successfully",success:true})
 }
 const getAddress=async (req,res)=>{
     const address=await Address.findOne({email:req.user})
