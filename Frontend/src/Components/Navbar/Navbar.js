@@ -37,12 +37,25 @@ class Navbar extends Component {
                 <Link style={{textDecoration:"none",color:"white"}} to="/">Ecommerce</Link>
               </Typography>
               
-             {(this.props.isLoggedin && !this.props.isAdmin ) && <Link style={{
+             {(this.props.isLoggedin && !this.props.isAdmin ) && <><Link style={{
                           color: "white",
                           marginRight: "10px",
                           textDecoration: "none",
                           font: "caption",
-              }} to="/cart"><AddShoppingCartIcon/><span className="cartItemNo">{this.props.cartItem}</span> </Link>}
+              }} to="/cart"><AddShoppingCartIcon/><span className="cartItemNo">{this.props.cartItem}</span> </Link>
+              <Link
+                    to="/orders"
+                    style={{
+                      color: "white",
+                      marginRight: "10px",
+                      textDecoration: "none",
+                      font: "caption",
+                    }}
+                  >
+                   All Orders
+                  </Link>
+                  </>
+              }
                        
               { this.props.isAdmin &&  <Link
                     to="/createProduct"

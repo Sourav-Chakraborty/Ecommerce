@@ -1,5 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const date = require('date-and-time');
+
 const User = require("../model/user");
 const Product = require("../model/product");
 const paypal = require('paypal-rest-sdk');
@@ -288,9 +290,9 @@ const emptyCart =async (req, res) => {
   const user=await User.findOne({email:req.user})
   const userCart=user.cart
   const updatedUser=await User.findOneAndUpdate({email:req.user},{cart:[]})
-  const d=new Date()
+  const d=date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')
 
-  const order=await Order.create({email:req.user,products:userCart})
+  const order=await Order.create({email:req.user,products:userCart,date:d})
   res.json({msg:'Removed successfully'})
 };
 
@@ -307,7 +309,7 @@ const getOrders=async (req,res)=>{
     }
     userOrders.push({data:orders[i].date,products:productList})
   }
-  res.json(userOrders)
+  res.json({userOrders})
 }
 
 module.exports = {

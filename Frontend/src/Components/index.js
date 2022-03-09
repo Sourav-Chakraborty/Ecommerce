@@ -8,6 +8,7 @@ import AlertBox from "./AlertBox";
 import Test from "./Test"
 import Footer from "./Footer/Footer";
 import CartItem from "./CartItem/CartItem";
+import OrderItem from "./OrderItem";
 export{
     Navbar,
     Login,
@@ -18,5 +19,6 @@ export{
     AlertBox,
     Test,
     Footer,
-    CartItem
+    CartItem,
+    OrderItem
 }

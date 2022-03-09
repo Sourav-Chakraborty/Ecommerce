@@ -17,6 +17,7 @@ import "./App.css";
 import ProductPage from "./Pages/ProductPage/ProductPage";
 import AddressPage from "./Pages/AddressPage/AddressPage";
 import PayPage from "./Pages/PayPage/PayPage";
+import OrderPage from "./Pages/OrderPage/OrderPage";
 export default class App extends Component {
   constructor(props) {
     super(props);
@@ -93,6 +94,9 @@ export default class App extends Component {
               </Route>
               <Route path="/pay">
                 <PayPage changeAlert={this.changeAlert} />
+              </Route>
+              <Route path="/orders">
+                <OrderPage changeAlert={this.changeAlert} />
               </Route>
             </Switch>
           </div>
