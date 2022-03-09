@@ -4,6 +4,7 @@ import { withRouter } from "react-router-dom";
 import axios from "axios";
 import "./productpage.css";
 import { connect } from "react-redux";
+import Rating from '@material-ui/lab/Rating';
 import { incrementCartVal } from "../../Redux_Store/actions/cartAction";
 class ProductPage extends Component {
   constructor(props) {
@@ -69,6 +70,8 @@ class ProductPage extends Component {
     this.fetchProductInfo();
   }
   render() {
+    const rationg=this.state.rating
+    console.log(rationg)
     return (
       <div className="productPage">
         <Grid align="center">
@@ -107,7 +110,8 @@ class ProductPage extends Component {
                 </Grid>
                 <Grid xs={3} className="specs">
                   <h6 style={{ marginBottom: "0" }}>Rating</h6>
-                  {this.state.rating}
+                  <Rating name="half-rating-read" value={rationg} precision={0.5} readOnly />
+                  
                 </Grid>
               </Card>
               {this.state.desc}

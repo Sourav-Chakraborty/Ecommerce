@@ -57,7 +57,7 @@ class AddressPage extends Component {
         "auth-token": localStorage.getItem("token"),
       },
     };
-    const response = await axios.post(
+    await axios.post(
       "http://localhost:5000/addAddress",
       {
         name: this.state.name,

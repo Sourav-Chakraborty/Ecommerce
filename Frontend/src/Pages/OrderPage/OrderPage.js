@@ -51,8 +51,7 @@ const mapStateToProps = (state) => {
   console.log(state)
   return {
     isLoggedin: state.loginReducers.isLoggedin,
-    // isAdmin:state.loginReducers.isAdmin,
-    // cartItem:state.cartItemNoReducers.item
+   
   };
 };
 export default connect(mapStateToProps)(withRouter(OrderPage))
