@@ -4,6 +4,7 @@ const User = require("../model/user");
 const Product = require("../model/product");
 const paypal = require('paypal-rest-sdk');
 const Address = require("../model/address");
+const Order=require("../model/Orders")
 const { findOne } = require("../model/user");
 const JSONSECRET = process.env.JSONSECRET;
 function generate(n = 6) {
@@ -282,51 +283,33 @@ const getAddress = async (req, res) => {
   res.json(address);
 };
 
-const payWithPaypal = (req, res) => {
-  console.log("From payments routes");
-  const create_payment_json = {
-    intent: "sale",
-    payer: {
-      payment_method: "paypal",
-    },
-    redirect_urls: {
-      return_url: "http://localhost:5000/success",
-      cancel_url: "http://localhost:5000/cancel",
-    },
-    transactions: [
-      {
-        item_list: {
-          items: [
-            {
-              name: "Red Sox Hat",
-              sku: "001",
-              price: "25.00",
-              currency: "USD",
-              quantity: 1,
-            },
-          ],
-        },
-        amount: {
-          currency: "USD",
-          total: "25.00",
-        },
-        description: "Hat for the best team ever",
-      },
-    ],
-  };
-  
-  paypal.payment.create(create_payment_json, function (error, payment) {
-    if (error) {
-      throw error;
-    } else {
-      for (let i = 0; i < payment.links.length; i++) {
-        if (payment.links[i].rel === "approval_url") {
-          res.redirect(payment.links[i].href,{},{"Access-Control-Allow-Credentials": true});
-        }
-      }
-    }
-  });
+
+const emptyCart =async (req, res) => {
+  const user=await User.findOne({email:req.user})
+  const userCart=user.cart
+  const updatedUser=await User.findOneAndUpdate({email:req.user},{cart:[]})
+  const d=new Date()
+
+  const order=await Order.create({email:req.user,products:userCart})
+  res.json({msg:'Removed successfully'})
 };
+
+const getOrders=async (req,res)=>{
+
+  const email=req.user
+  const orders=await Order.find({email})
+  const userOrders=[]
+  for(let i=0;i<orders.length;i++){
+    const productList=[]
+    for(let j=0;j<orders[i].products.length;j++){
+      const product=await Product.findById(orders[i].products[j].productId)
+      productList.push({name:product.name,price:product.price,img:product.img,qty:orders[i].products[j].qty})
+    }
+    userOrders.push({data:orders[i].date,products:productList})
+  }
+  res.json(userOrders)
+}
+
 module.exports = {
   signUpController,
   signInController,
@@ -346,5 +329,6 @@ module.exports = {
   addAdress,
   getAddress,
   returnCartTotal,
-  payWithPaypal,
+  emptyCart,
+  getOrders
 };

@@ -23,5 +23,6 @@ router.put("/removeFromCart/:id",fetchUser,controllers.removeFromCart)
 router.post("/addAddress",fetchUser,controllers.addAdress)
 router.get("/getAddress",fetchUser,controllers.getAddress)
 router.get("/totalCartPrice",fetchUser,controllers.returnCartTotal)
-router.post("/pay",fetchUser,controllers.payWithPaypal)
+router.put("/emptyCart",fetchUser,controllers.emptyCart)
+router.get("/getOrders",fetchUser,controllers.getOrders)
 module.exports=router

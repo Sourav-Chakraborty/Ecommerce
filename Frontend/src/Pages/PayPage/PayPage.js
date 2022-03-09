@@ -1,9 +1,12 @@
-import { Button, Container, Grid } from '@material-ui/core'
+import {Container, Grid } from '@material-ui/core'
 import axios from 'axios'
 import React, { Component } from 'react'
+import {withRouter} from "react-router-dom"
 import PaypalExpressBtn from 'react-paypal-express-checkout';
+import { setCartVal } from '../../Redux_Store/actions/cartAction';
+import { connect } from 'react-redux';
 // import "./paypage.css"
-export default class PayPage extends Component {
+class PayPage extends Component {
     constructor(props){
         super(props)
         this.state={
@@ -40,10 +43,20 @@ export default class PayPage extends Component {
     componentDidMount(){
         this.fetchTotalCost()
     }
-    onSuccess = (payment) => {
-                
+    onSuccess =async (payment) => {
+        const config = {
+            headers: {
+              "auth-token": localStorage.getItem("token"),
+            },
+        }
                 console.log("The payment was succeeded!", payment);
-                
+                const response=await axios.put("http://localhost:5000/emptyCart",{},config)
+                if(response.data.msg){
+                    this.props.history.push("/")
+                    this.props.cartItem(0)
+                }
+
+
     }
     onError = (err) => {
         
@@ -67,10 +80,18 @@ export default class PayPage extends Component {
           <Container style={{height:'80vh'}}>
               <Grid align="center" className='midOfScreen'>
                     <h6>Remember all transaction will be through us dollar only Rs {this.state.totalCost} = {parseInt(this.state.totalCost)/75} USD</h6>
-                    <PaypalExpressBtn env={env} client={client} currency={currency} total={total} onError={this.onError} onSuccess={this.onSuccess} onCancel={this.onCancel} />
+                    <PaypalExpressBtn env={env} client={client} currency={currency} total={Math.round(total)} onError={this.onError} onSuccess={this.onSuccess} onCancel={this.onCancel} />
                 </Grid>
           </Container>
       </div>
     )
   }
 }
+const mapDispatchToProps=(dispatch)=>{
+    return{
+      cartItem:(val)=>{
+        dispatch(setCartVal(val))
+      }
+    }
+  }
+export default connect(null,mapDispatchToProps)(withRouter(PayPage))
