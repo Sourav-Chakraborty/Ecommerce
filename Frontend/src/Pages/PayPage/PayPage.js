@@ -5,16 +5,20 @@ import {withRouter} from "react-router-dom"
 import PaypalExpressBtn from 'react-paypal-express-checkout';
 import { setCartVal } from '../../Redux_Store/actions/cartAction';
 import { connect } from 'react-redux';
+
 // import "./paypage.css"
 class PayPage extends Component {
     constructor(props){
         super(props)
+        if(!this.props.isLoggedin)
+            this.props.history.push("/login")
         this.state={
             totalCost:0,
             env:"sandbox",
             currency:"USD",
 
         }
+
     }
     handlePayment=async()=>{
         const config = {
@@ -87,6 +91,14 @@ class PayPage extends Component {
     )
   }
 }
+const mapStateToProps = (state) => {
+  console.log(state)
+  return {
+    isLoggedin: state.loginReducers.isLoggedin,
+    isAdmin:state.loginReducers.isAdmin,
+    cartItem:state.cartItemNoReducers.item
+  };
+};
 const mapDispatchToProps=(dispatch)=>{
     return{
       cartItem:(val)=>{
@@ -94,4 +106,4 @@ const mapDispatchToProps=(dispatch)=>{
       }
     }
   }
-export default connect(null,mapDispatchToProps)(withRouter(PayPage))
+export default connect(mapStateToProps,mapDispatchToProps)(withRouter(PayPage))

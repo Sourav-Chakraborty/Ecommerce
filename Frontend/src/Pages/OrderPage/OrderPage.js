@@ -1,11 +1,16 @@
 import axios from 'axios'
 import React, { Component } from 'react'
+import {withRouter} from "react-router-dom"
+
+import { connect } from 'react-redux'
 import SingleDayOrder from '../../Components/SingleDayOrder'
 
-export default class OrderPage extends Component {
+class OrderPage extends Component {
 
   constructor(props){
     super(props)
+     if(!this.props.isLoggedin)
+     this.props.history.push("/login")
     this.state={
       orders:[]
     }
@@ -42,3 +47,12 @@ export default class OrderPage extends Component {
     )
   }
 }
+const mapStateToProps = (state) => {
+  console.log(state)
+  return {
+    isLoggedin: state.loginReducers.isLoggedin,
+    // isAdmin:state.loginReducers.isAdmin,
+    // cartItem:state.cartItemNoReducers.item
+  };
+};
+export default connect(mapStateToProps)(withRouter(OrderPage))
