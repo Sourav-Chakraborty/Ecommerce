@@ -41,7 +41,7 @@ export default class PayPage extends Component {
         this.fetchTotalCost()
     }
     onSuccess = (payment) => {
-        
+                
                 console.log("The payment was succeeded!", payment);
                 
     }
@@ -50,14 +50,14 @@ export default class PayPage extends Component {
         console.log("Error!", err);
     }
     onCancel = (data) => {
-        // User pressed "cancel" or close Paypal's popup!
+        
         console.log('The payment was cancelled!', data);
-        // You can bind the "data" object's value to your state or props or whatever here, please see below for sample returned data
+       
     }
   render() {
     let env = 'sandbox'; 
     let currency = 'USD'; 
-    let total = 1
+    let total = parseInt(this.state.totalCost)/75
     const client = {
         sandbox:    'Ad1WEixlbXi4CJmoihX3P6F8jLpxFSD_wPSyC_Jlctlw3SzwKJGrB1ws7tvwonrdfrkq8a-ZhesH7v6G',
         production: 'YOUR-PRODUCTION-APP-ID',
@@ -66,7 +66,7 @@ export default class PayPage extends Component {
       <div>
           <Container style={{height:'80vh'}}>
               <Grid align="center" className='midOfScreen'>
-                    <h6>Remember all transaction will be through us dollar only</h6>
+                    <h6>Remember all transaction will be through us dollar only Rs {this.state.totalCost} = {parseInt(this.state.totalCost)/75} USD</h6>
                     <PaypalExpressBtn env={env} client={client} currency={currency} total={total} onError={this.onError} onSuccess={this.onSuccess} onCancel={this.onCancel} />
                 </Grid>
           </Container>

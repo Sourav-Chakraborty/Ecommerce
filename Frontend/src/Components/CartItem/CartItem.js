@@ -15,7 +15,7 @@ class CartItem extends Component {
   }
   static getDerivedStateFromProps(props,state){
     if(props.cost!==state.cost){
-      console.log("state value changed")
+     
       return {
         cost:parseInt(props.cost),
         qty:parseInt(props.qty)
