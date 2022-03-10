@@ -5,6 +5,7 @@ import { withRouter } from "react-router-dom";
 import PaypalExpressBtn from "react-paypal-express-checkout";
 import { setCartVal } from "../../Redux_Store/actions/cartAction";
 import { connect } from "react-redux";
+import SuccessPopup from "react-success-popup";
 
 // import "./paypage.css"
 class PayPage extends Component {
@@ -17,7 +18,6 @@ class PayPage extends Component {
       currency: "USD",
     };
   }
-
 
   loadScript = (src) => {
     return new Promise((resolve) => {
@@ -32,8 +32,6 @@ class PayPage extends Component {
       document.body.appendChild(script);
     });
   };
-
-  
 
   handleRazorpay = async () => {
     const config = {
@@ -68,7 +66,7 @@ class PayPage extends Component {
       description: "Test Transaction",
 
       order_id: order_id,
-      handler: async (response)=> {
+      handler: async (response) => {
         const data = {
           orderCreationId: order_id,
           razorpayPaymentId: response.razorpay_payment_id,
@@ -81,15 +79,17 @@ class PayPage extends Component {
           data,
           config
         );
-        console.log("result is",result)
-          if(result.data.msg){
-            this.props.history.push("/")
-            this.props.cartItem(0);
-          }
-        
-        
+        console.log("result is", result);
+        if (result.data.msg) {
+          this.props.changeAlert(true, "success", "Successfully paid");
+          setTimeout(() => {
+            this.props.changeAlert(false);
+          }, 5000);
+          this.props.history.push("/");
+          this.props.cartItem(0);
+        }
       },
-     
+
       notes: {
         address: "Ecommerce Corporate Office",
       },
@@ -99,10 +99,7 @@ class PayPage extends Component {
     };
     const paymentObject = new window.Razorpay(options);
     paymentObject.open();
-   
   };
-
-  
 
   handlePayment = async () => {
     const config = {
@@ -142,6 +139,10 @@ class PayPage extends Component {
       config
     );
     if (response.data.msg) {
+      this.props.changeAlert(true, "success", "Successfully paid");
+      setTimeout(() => {
+        this.props.changeAlert(false);
+      }, 5000);
       this.props.history.push("/");
       this.props.cartItem(0);
     }
@@ -170,6 +171,7 @@ class PayPage extends Component {
               that is Rs {this.state.totalCost} ={" "}
               {parseInt(this.state.totalCost) / 75} USD
             </h6>
+
             <PaypalExpressBtn
               env={env}
               client={client}

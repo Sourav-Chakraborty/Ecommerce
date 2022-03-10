@@ -62,7 +62,21 @@ class ProductPage extends Component {
     const response=await axios.put(`http://localhost:5000/addToCart/${id}`,{},config)
     if(response.data.success){
       this.props.incrementCart()   
+      this.props.changeAlert(true,"success",'Added to cart')
+      setTimeout(()=>{
+      this.props.changeAlert(false)
+
+      },5000)
     }
+    else{
+      this.props.changeAlert(true,"error",'already in cart')
+      setTimeout(()=>{
+      this.props.changeAlert(false)
+
+      },5000)
+    }
+    
+    
    
   };
 

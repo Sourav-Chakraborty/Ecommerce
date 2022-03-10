@@ -34,7 +34,7 @@ export default class Homepage extends Component {
         <div className="caroselView">
 
            {
-             this.state.product.map(p=> <Product key={p._id} name={p.name} price={p.price} img={p.img} desc={p.desc} id={p._id}/>)
+             this.state.product.map(p=> <Product changeAlert={this.props.changeAlert} key={p._id} name={p.name} price={p.price} img={p.img} desc={p.desc} id={p._id}/>)
             
             }
            

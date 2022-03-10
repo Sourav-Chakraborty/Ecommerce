@@ -19,9 +19,9 @@ class Navbar extends Component {
   };
 
   render() {
-    console.log(this.props.cartItem)
+   
     return (
-      <div className="myd-5 fixed-top">
+      <div className="fixed-top">
         <Link to="/login" id="login"></Link>
         <Link to="/register" id="register"></Link>
 

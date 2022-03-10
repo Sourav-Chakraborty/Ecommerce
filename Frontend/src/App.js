@@ -63,7 +63,7 @@ export default class App extends Component {
           <div className="Body">
             <Switch>
               <Route exact path="/">
-                <Homepage />
+                <Homepage changeAlert={this.changeAlert} />
               </Route>
               <Route path="/login">
                 <Login changeAlert={this.changeAlert} />
