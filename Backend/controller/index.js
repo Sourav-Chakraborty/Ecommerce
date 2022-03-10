@@ -1,12 +1,12 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const date = require('date-and-time');
-
+const date = require("date-and-time");
+const Razorpay=require("razorpay")
 const User = require("../model/user");
 const Product = require("../model/product");
-const paypal = require('paypal-rest-sdk');
+const paypal = require("paypal-rest-sdk");
 const Address = require("../model/address");
-const Order=require("../model/Orders")
+const Order = require("../model/Orders");
 const { findOne } = require("../model/user");
 const JSONSECRET = process.env.JSONSECRET;
 function generate(n = 6) {
@@ -285,32 +285,71 @@ const getAddress = async (req, res) => {
   res.json(address);
 };
 
+const emptyCart = async (req, res) => {
+  const user = await User.findOne({ email: req.user });
+  const userCart = user.cart;
+  const updatedUser = await User.findOneAndUpdate(
+    { email: req.user },
+    { cart: [] }
+  );
+  const d = date.format(new Date(), "YYYY/MM/DD HH:mm:ss");
 
-const emptyCart =async (req, res) => {
-  const user=await User.findOne({email:req.user})
-  const userCart=user.cart
-  const updatedUser=await User.findOneAndUpdate({email:req.user},{cart:[]})
-  const d=date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')
-
-  const order=await Order.create({email:req.user,products:userCart,date:d})
-  res.json({msg:'Removed successfully'})
+  const order = await Order.create({
+    email: req.user,
+    products: userCart,
+    date: d,
+  });
+  res.json({ msg: "Removed successfully" });
 };
 
-const getOrders=async (req,res)=>{
 
-  const email=req.user
-  const orders=await Order.find({email})
-  const userOrders=[]
-  for(let i=0;i<orders.length;i++){
-    const productList=[]
-    for(let j=0;j<orders[i].products.length;j++){
-      const product=await Product.findById(orders[i].products[j].productId)
-      productList.push({name:product.name,price:product.price,img:product.img,qty:orders[i].products[j].qty})
+
+
+const getOrders = async (req, res) => {
+  const email = req.user;
+  const orders = await Order.find({ email });
+  const userOrders = [];
+  for (let i = 0; i < orders.length; i++) {
+    const productList = [];
+    for (let j = 0; j < orders[i].products.length; j++) {
+      const product = await Product.findById(orders[i].products[j].productId);
+      productList.push({
+        name: product.name,
+        price: product.price,
+        img: product.img,
+        qty: orders[i].products[j].qty,
+      });
     }
-    userOrders.push({data:orders[i].date,products:productList})
+    userOrders.push({ data: orders[i].date, products: productList });
   }
-  res.json({userOrders})
-}
+  res.json({ userOrders });
+};
+
+
+
+const payWithRazorpay =async (req, res) => {
+  const {amount}=req.body
+  const instance = new Razorpay({
+    key_id: process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_SECRET,
+  });
+
+  const options = {
+    amount: parseInt(amount)*100, // amount in smallest currency unit
+    currency: "INR",
+    receipt: "receipt_order_74394",
+  };
+
+  const order = await instance.orders.create(options);
+
+  if (!order) return res.status(500).send("Some error occured");
+
+  res.json(order);
+};
+
+
+
+
 
 module.exports = {
   signUpController,
@@ -332,5 +371,6 @@ module.exports = {
   getAddress,
   returnCartTotal,
   emptyCart,
-  getOrders
+  getOrders,
+  payWithRazorpay,
 };

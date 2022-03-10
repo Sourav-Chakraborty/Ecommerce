@@ -25,4 +25,5 @@ router.get("/getAddress",fetchUser,controllers.getAddress)
 router.get("/totalCartPrice",fetchUser,controllers.returnCartTotal)
 router.put("/emptyCart",fetchUser,controllers.emptyCart)
 router.get("/getOrders",fetchUser,controllers.getOrders)
+router.post("/razorpay/orders",fetchUser,controllers.payWithRazorpay)
 module.exports=router
