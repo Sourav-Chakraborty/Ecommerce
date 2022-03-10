@@ -5,7 +5,6 @@ import { withRouter } from "react-router-dom";
 import PaypalExpressBtn from "react-paypal-express-checkout";
 import { setCartVal } from "../../Redux_Store/actions/cartAction";
 import { connect } from "react-redux";
-import SuccessPopup from "react-success-popup";
 
 // import "./paypage.css"
 class PayPage extends Component {
