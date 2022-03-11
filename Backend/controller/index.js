@@ -48,7 +48,7 @@ const signInController = async (req, res) => {
   let user = await User.findOne({ email });
 
   if (!user) return res.json({ msg: "Invalid user name or password" });
-
+  
   const compairPassword = await bcrypt.compare(password, user.password);
 
   if (!compairPassword)
@@ -347,7 +347,30 @@ const payWithRazorpay =async (req, res) => {
   res.json(order);
 };
 
+const googleLogin=async (req,res)=>{
+  const {name,email}=req.body
+  const user=await User.findOne({email})
+  if(user){
+    const data = {
+      user: {
+        email: email,
+      },
+    };
+    const authToken = jwt.sign(data, JSONSECRET);
+    return res.json({authToken,isAdmin:user.isAdmin,cartItem:user.cart.length})
+  }
+  else{
+    user = await User.create({ name, email, password: "Google login" });
+    const data = {
+      user: {
+        email: email,
+      },
+    };
+    const authToken = jwt.sign(data, JSONSECRET);
+    return res.json({authToken,isAdmin:false,cartItem:0})
+  }
 
+}
 
 
 
@@ -373,4 +396,5 @@ module.exports = {
   emptyCart,
   getOrders,
   payWithRazorpay,
+  googleLogin
 };

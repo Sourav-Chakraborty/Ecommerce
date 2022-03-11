@@ -7,6 +7,7 @@ const fetchUser=require("../middleware/fetchUser")
 
 router.post("/signup",controllers.signUpController)
 router.post("/signin",controllers.signInController)
+router.post("/googleSignin",controllers.googleLogin)
 router.post("/forgetPassword",controllers.forgetPassword)
 router.post("/forgetPassword/changePassword",controllers.changeOldPasswordForgetPassword)
 router.get("/getUser",fetchUser,controllers.getUserData)
