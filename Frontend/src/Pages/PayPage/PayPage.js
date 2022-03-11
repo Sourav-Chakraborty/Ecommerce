@@ -69,7 +69,7 @@ class PayPage extends Component {
     const { amount, id: order_id, currency } = result.data;
 
     const options = {
-      key: "rzp_test_0YO9lZ0C5COz1r", // Enter the Key ID generated from the Dashboard
+      key:process.env.REACT_APP_RAZORPAY_KEY, // Enter the Key ID generated from the Dashboard
       amount: amount.toString(),
       currency: currency,
       name: "Ecommerce Company",
@@ -171,12 +171,13 @@ class PayPage extends Component {
       this.props.cartItem(0);
   }
   render() {
+    console.log(process.env.REACT_APP_HELLO)
     let env = "sandbox";
     let currency = "USD";
     let total = parseInt(this.state.totalCost) / 75;
     const client = {
       sandbox:
-        "Ad1WEixlbXi4CJmoihX3P6F8jLpxFSD_wPSyC_Jlctlw3SzwKJGrB1ws7tvwonrdfrkq8a-ZhesH7v6G",
+        process.env.REACT_APP_PAYPAL_SANDBOX,
       production: "YOUR-PRODUCTION-APP-ID",
     };
     return (

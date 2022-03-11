@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+
 import {
   Navbar,
   Login,
@@ -48,6 +49,7 @@ export default class App extends Component {
   };
 
   render() {
+
     return (
       <div>
         <Router>
