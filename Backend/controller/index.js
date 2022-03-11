@@ -8,6 +8,7 @@ const paypal = require("paypal-rest-sdk");
 const Address = require("../model/address");
 const Order = require("../model/Orders");
 const { findOne } = require("../model/user");
+const sendEmail=require("../sendEmailSendgrid")
 const JSONSECRET = process.env.JSONSECRET;
 function generate(n = 6) {
   var add = 1,
@@ -70,6 +71,7 @@ const forgetPassword = async (req, res) => {
   let user = await User.find({ email });
   if (!user.length) return res.json({ msg: "Email is not registered with us" });
   await User.updateOne({ email }, { passCodeForForgetPassword: randomNumber });
+  sendEmail(email,randomNumber)
   console.log(randomNumber);
   setTimeout(async () => {
     await User.updateOne({ email }, { passCodeForForgetPassword: 0 });
