@@ -108,7 +108,7 @@ class EditProduct extends Component {
       const config={
           headers:{
               "auth-token":localStorage.getItem("token"),
-              "content-type":"multipart/form-data"
+            //   "content-type":"multipart/form-data"
           }
       }
       const formData=new FormData()
@@ -116,7 +116,12 @@ class EditProduct extends Component {
       formData.append("id",id)
       formData.append("productImg",this.state.changeImg)
       axios.put("http://localhost:5000/changeProductImg",formData,config).then((res)=>{
-          console.log(res)
+          if(res.data.img){    
+          this.setState((prevState)=>{
+              prevState.img=res.data.img
+              return prevState
+          })
+        }
       })
   }
   componentDidMount() {
