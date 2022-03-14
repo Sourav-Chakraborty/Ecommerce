@@ -214,7 +214,36 @@ const deleteProduct=async (req,res)=>{
 
 
 
+const editProduct=async(req,res)=>{
+ 
+  const user=await User.findOne({email:req.user})
+  if(user.isAdmin===false)
+    return res.json({msg:"You are not admin"})
+    
+    const { name, type, company, model, country, mfg, rating, desc, price,id } =req.body;
+    await Product.findByIdAndUpdate(id,{name, type, company, model, country, mfg, rating, desc, price})
+    return res.json({status:"200",msg:"Successfully edited"})
+}
 
+const changeProductImg=async(req,res)=>{
+ 
+  const user= await User.findOne({email:req.user})
+  if(user.isAdmin===false)
+    return res.json({msg:"You are not admin"})
+    const productImg = req.files.productImg;
+
+    const date = Date.now() + ".jpg";
+    const imgPath = __dirname.slice(0, -19) + "/Frontend/public/" + date;
+    productImg.mv(imgPath,(err)=>{
+      if(err)
+        return console.log(err)
+      console.log("Successfully uploaded")
+    })
+    
+    const {id}=req.body
+    await Product.findByIdAndUpdate(id,{img:date})
+    res.json({img:date,msg:"Uploaded"})
+}
 
 const getAllProducts = async (req, res) => {
   const product = await Product.find({});
@@ -413,5 +442,7 @@ module.exports = {
   getOrders,
   payWithRazorpay,
   googleLogin,
-  deleteProduct
+  deleteProduct,
+  editProduct,
+  changeProductImg
 };

@@ -19,6 +19,7 @@ import ProductPage from "./Pages/ProductPage/ProductPage";
 import AddressPage from "./Pages/AddressPage/AddressPage";
 import PayPage from "./Pages/PayPage/PayPage";
 import OrderPage from "./Pages/OrderPage/OrderPage";
+import EditProduct from "./Pages/EditProductPage/EditProduct";
 export default class App extends Component {
   constructor(props) {
     super(props);
@@ -87,6 +88,9 @@ export default class App extends Component {
               </Route>
               <Route path="/createProduct">
                 <CreateProduct changeAlert={this.changeAlert} />
+              </Route>
+              <Route path="/editProduct/:id">
+                <EditProduct changeAlert={this.changeAlert} />
               </Route>
               <Route path="/cart">
                 <CartPage changeAlert={this.changeAlert} />

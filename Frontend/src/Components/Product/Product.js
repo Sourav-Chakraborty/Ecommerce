@@ -50,7 +50,7 @@ import axios from 'axios';
                 {
                   isAdmin? <>
                   <button className='mx-2 cardBtnRed' onClick={(id)=> this.removeProduct(id)} >Delete product</button> 
-                  
+                  <Link className='mx-2 cardBtnGreen' to={`/editproduct/${id}`}>Edit</Link>
                   </>:<>
                   <button className='mx-2 cardBtnGreen' onClick={this.addToCart} disabled={!this.props.isLoggedin && true}>Add Cart</button> 
                    <Link className='mx-2 cardBtnRed' to={`/product/${id}`}>view</Link>
