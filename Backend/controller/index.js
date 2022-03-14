@@ -202,6 +202,20 @@ const createProduct = async (req, res) => {
   res.json(product);
 };
 
+
+const deleteProduct=async (req,res)=>{
+  const id=req.params.id
+  const user=await User.findOne({email:req.user})
+  if(user.isAdmin===false)
+    return res.json({msg:"You are not admin"})
+  await Product.findByIdAndRemove(id)
+  res.json({status:"200",msg:"Removed successfully"})
+}
+
+
+
+
+
 const getAllProducts = async (req, res) => {
   const product = await Product.find({});
   res.json(product);
@@ -398,5 +412,6 @@ module.exports = {
   emptyCart,
   getOrders,
   payWithRazorpay,
-  googleLogin
+  googleLogin,
+  deleteProduct
 };

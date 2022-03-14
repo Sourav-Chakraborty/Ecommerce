@@ -11,6 +11,7 @@ export default class Homepage extends Component {
       allproducts:[],
       product: [],
     };
+    this.deleteProduct.bind(this)
   }
   fetchAllProducts = async () => {
     const response = await axios.get("http://localhost:5000/getAllProduct");
@@ -34,6 +35,22 @@ export default class Homepage extends Component {
     })
 
   }
+
+  deleteProduct=async (id)=>{
+    const config = {
+      headers: {
+        "auth-token": localStorage.getItem("token"),
+      },
+    };
+    const response=await axios.delete(`http://localhost:5000/deleteProduct/${id}`,config)
+    console.log(response)
+    if(response.data.status){
+      this.fetchAllProducts()
+    }
+  }
+
+
+
   componentDidMount() {
     this.fetchAllProducts();
   }
@@ -50,6 +67,7 @@ export default class Homepage extends Component {
           <div className="caroselView my-3">
             {this.state.product.map((p) => (
               <Product
+                deleteProduct={this.deleteProduct}
                 changeAlert={this.props.changeAlert}
                 key={p._id}
                 name={p.name}

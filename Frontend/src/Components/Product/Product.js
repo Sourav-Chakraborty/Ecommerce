@@ -29,8 +29,12 @@ import axios from 'axios';
     }
    
   };
+  removeProduct=()=>{
+    this.props.deleteProduct(this.props.id)
+  }
   render() {
-    const {img,desc,name,id,price}=this.props
+   
+    const {img,desc,name,id,price,isAdmin}=this.props
     return (
       <div className='productCard'>
           <div className="productImg">
@@ -43,8 +47,16 @@ import axios from 'axios';
                    {desc.length>50? desc.slice(0,50)+"...": desc}
               </p>
               <div className="buttons">
-                <button className='mx-2 cardBtnGreen' onClick={this.addToCart} disabled={!this.props.isLoggedin && true}>Add Cart</button> 
-                 <Link className='mx-2 cardBtnRed' to={`/product/${id}`}>view</Link> 
+                {
+                  isAdmin? <>
+                  <button className='mx-2 cardBtnRed' onClick={(id)=> this.removeProduct(id)} >Delete product</button> 
+                  
+                  </>:<>
+                  <button className='mx-2 cardBtnGreen' onClick={this.addToCart} disabled={!this.props.isLoggedin && true}>Add Cart</button> 
+                   <Link className='mx-2 cardBtnRed' to={`/product/${id}`}>view</Link>
+                  
+                  </>
+                }
               </div>
           </div>
       </div>
@@ -53,7 +65,8 @@ import axios from 'axios';
 }
 const mapStateToProps=(state)=>{
   return {
-    isLoggedin:state.loginReducers.isLoggedin
+    isLoggedin:state.loginReducers.isLoggedin,
+    isAdmin:state.loginReducers.isAdmin
   }
 }
 const mapDispatchToProps=(dispatch)=>{
