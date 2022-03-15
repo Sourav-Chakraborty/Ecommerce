@@ -1,14 +1,17 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const date = require("date-and-time");
-const Razorpay=require("razorpay")
+const Razorpay = require("razorpay");
 const User = require("../model/user");
 const Product = require("../model/product");
 const paypal = require("paypal-rest-sdk");
 const Address = require("../model/address");
 const Order = require("../model/Orders");
+const Category = require("../model/category");
+const Company = require("../model/company");
 const { findOne } = require("../model/user");
-const sendEmail=require("../sendEmailSendgrid")
+const sendEmail = require("../sendEmailSendgrid");
+const { response } = require("express");
 const JSONSECRET = process.env.JSONSECRET;
 function generate(n = 6) {
   var add = 1,
@@ -49,7 +52,7 @@ const signInController = async (req, res) => {
   let user = await User.findOne({ email });
 
   if (!user) return res.json({ msg: "Invalid user name or password" });
-  
+
   const compairPassword = await bcrypt.compare(password, user.password);
 
   if (!compairPassword)
@@ -71,7 +74,7 @@ const forgetPassword = async (req, res) => {
   let user = await User.find({ email });
   if (!user.length) return res.json({ msg: "Email is not registered with us" });
   await User.updateOne({ email }, { passCodeForForgetPassword: randomNumber });
-  sendEmail(email,randomNumber)
+  sendEmail(email, randomNumber);
   console.log(randomNumber);
   setTimeout(async () => {
     await User.updateOne({ email }, { passCodeForForgetPassword: 0 });
@@ -180,11 +183,20 @@ const createProduct = async (req, res) => {
   });
   const { name, type, company, model, country, mfg, rating, desc, price } =
     req.body;
+
   const isProductExists = await Product.findOne({
     $and: [{ name }, { model }],
   });
 
   if (isProductExists) return res.json({ msg: "Product already exists" });
+
+  Category.findOne({ name: type.toLowerCase() }).then((res) => {
+    if (!res) Category.create({ name: type.toLowerCase() });
+  });
+
+  Company.findOne({ name: company.toLowerCase() }).then((res) => {
+    if (!res) Company.create({ name: company.toLowerCase() });
+  });
 
   const product = await Product.create({
     name,
@@ -202,48 +214,58 @@ const createProduct = async (req, res) => {
   res.json(product);
 };
 
+const deleteProduct = async (req, res) => {
+  const id = req.params.id;
+  const user = await User.findOne({ email: req.user });
+  if (user.isAdmin === false) return res.json({ msg: "You are not admin" });
+  await Product.findByIdAndRemove(id);
+  res.json({ status: "200", msg: "Removed successfully" });
+};
 
-const deleteProduct=async (req,res)=>{
-  const id=req.params.id
-  const user=await User.findOne({email:req.user})
-  if(user.isAdmin===false)
-    return res.json({msg:"You are not admin"})
-  await Product.findByIdAndRemove(id)
-  res.json({status:"200",msg:"Removed successfully"})
-}
+const editProduct = async (req, res) => {
+  const user = await User.findOne({ email: req.user });
+  if (user.isAdmin === false) return res.json({ msg: "You are not admin" });
 
+  const { name, type, company, model, country, mfg, rating, desc, price, id } =
+    req.body;
+  Category.findOne({ name: type.toLowerCase() }).then((res) => {
+    if (!res) Category.create({ name: type.toLowerCase() });
+  });
 
+  Company.findOne({ name: company.toLowerCase() }).then((res) => {
+    if (!res) Company.create({ name: company.toLowerCase() });
+  });
 
-const editProduct=async(req,res)=>{
- 
-  const user=await User.findOne({email:req.user})
-  if(user.isAdmin===false)
-    return res.json({msg:"You are not admin"})
-    
-    const { name, type, company, model, country, mfg, rating, desc, price,id } =req.body;
-    await Product.findByIdAndUpdate(id,{name, type, company, model, country, mfg, rating, desc, price})
-    return res.json({status:"200",msg:"Successfully edited"})
-}
+  await Product.findByIdAndUpdate(id, {
+    name,
+    type,
+    company,
+    model,
+    country,
+    mfg,
+    rating,
+    desc,
+    price,
+  });
+  return res.json({ status: "200", msg: "Successfully edited" });
+};
 
-const changeProductImg=async(req,res)=>{
- 
-  const user= await User.findOne({email:req.user})
-  if(user.isAdmin===false)
-    return res.json({msg:"You are not admin"})
-    const productImg = req.files.productImg;
+const changeProductImg = async (req, res) => {
+  const user = await User.findOne({ email: req.user });
+  if (user.isAdmin === false) return res.json({ msg: "You are not admin" });
+  const productImg = req.files.productImg;
 
-    const date = Date.now() + ".jpg";
-    const imgPath = __dirname.slice(0, -19) + "/Frontend/public/" + date;
-    productImg.mv(imgPath,(err)=>{
-      if(err)
-        return console.log(err)
-      console.log("Successfully uploaded")
-    })
-    
-    const {id}=req.body
-    await Product.findByIdAndUpdate(id,{img:date})
-    res.json({img:date,msg:"Uploaded"})
-}
+  const date = Date.now() + ".jpg";
+  const imgPath = __dirname.slice(0, -19) + "/Frontend/public/" + date;
+  productImg.mv(imgPath, (err) => {
+    if (err) return console.log(err);
+    console.log("Successfully uploaded");
+  });
+
+  const { id } = req.body;
+  await Product.findByIdAndUpdate(id, { img: date });
+  res.json({ img: date, msg: "Uploaded" });
+};
 
 const getAllProducts = async (req, res) => {
   const product = await Product.find({});
@@ -347,9 +369,6 @@ const emptyCart = async (req, res) => {
   res.json({ msg: "Removed successfully" });
 };
 
-
-
-
 const getOrders = async (req, res) => {
   const email = req.user;
   const orders = await Order.find({ email });
@@ -370,17 +389,15 @@ const getOrders = async (req, res) => {
   res.json({ userOrders });
 };
 
-
-
-const payWithRazorpay =async (req, res) => {
-  const {amount}=req.body
+const payWithRazorpay = async (req, res) => {
+  const { amount } = req.body;
   const instance = new Razorpay({
     key_id: process.env.RAZORPAY_KEY_ID,
     key_secret: process.env.RAZORPAY_SECRET,
   });
 
   const options = {
-    amount: parseInt(amount)*100, // amount in smallest currency unit
+    amount: parseInt(amount) * 100, // amount in smallest currency unit
     currency: "INR",
     receipt: "receipt_order_74394",
   };
@@ -392,19 +409,22 @@ const payWithRazorpay =async (req, res) => {
   res.json(order);
 };
 
-const googleLogin=async (req,res)=>{
-  const {name,email}=req.body
-  const user=await User.findOne({email})
-  if(user){
+const googleLogin = async (req, res) => {
+  const { name, email } = req.body;
+  const user = await User.findOne({ email });
+  if (user) {
     const data = {
       user: {
         email: email,
       },
     };
     const authToken = jwt.sign(data, JSONSECRET);
-    return res.json({authToken,isAdmin:user.isAdmin,cartItem:user.cart.length})
-  }
-  else{
+    return res.json({
+      authToken,
+      isAdmin: user.isAdmin,
+      cartItem: user.cart.length,
+    });
+  } else {
     user = await User.create({ name, email, password: "Google login" });
     const data = {
       user: {
@@ -412,12 +432,50 @@ const googleLogin=async (req,res)=>{
       },
     };
     const authToken = jwt.sign(data, JSONSECRET);
-    return res.json({authToken,isAdmin:false,cartItem:0})
+    return res.json({ authToken, isAdmin: false, cartItem: 0 });
   }
+};
 
+const getAllCategories = (req, res) => {
+  Category.find({}).then((response) => {
+    res.json(response);
+  });
+};
+
+const getAllBrands = (req, res) => {
+  Company.find({}).then((response) => {
+    res.json(response);
+  });
+};
+
+const editCategory=(req,res)=>{
+  const {oldCate,newCate}=req.body
+  Category.findOneAndReplace({name:oldCate},{name:newCate.toLowerCase()}).then((response)=>{
+    res.json({msg:"Successfully edited"})
+  })
 }
 
+const editBrands=(req,res)=>{
+  const {oldBrand,newBrand}=req.body
+  Company.findOneAndReplace({name:oldBrand},{name:newBrand.toLowerCase()}).then((response)=>{
+    res.json({msg:"Successfully edited"})
+  })
+}
 
+const deleteCategory=(req,res)=>{
+  const category=req.params.cate
+  Category.findOneAndDelete({name:category}).then(response=>{
+    res.json({msg:"Deleted successfully"})
+  })
+}
+
+const deleteBrand=(req,res)=>{
+  const brand=req.params.brand
+  Company.findOneAndDelete({name:brand}).then(response=>{
+    res.json({msg:"Deleted successfully"})
+
+  })
+}
 
 module.exports = {
   signUpController,
@@ -444,5 +502,11 @@ module.exports = {
   googleLogin,
   deleteProduct,
   editProduct,
-  changeProductImg
+  changeProductImg,
+  getAllCategories,
+  getAllBrands,
+  editCategory,
+  editBrands,
+  deleteCategory,
+  deleteBrand
 };

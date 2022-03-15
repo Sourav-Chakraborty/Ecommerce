@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 import { login } from "../Redux_Store/actions/loginAction";
 import { Avatar, Button, Grid, Paper, TextField } from "@material-ui/core";
 import { Link } from "react-router-dom";
@@ -48,7 +49,7 @@ class Login extends Component {
       localStorage.setItem("token", response.data.authToken);
       this.props.login(response.data.isAdmin);
       this.props.cartItem(response.data.cartItem);
-      document.getElementById("dashboard").click();
+      this.props.history.push("/")
       this.props.changeAlert(true, "success", "Log in Successful");
       setTimeout(() => {
         this.props.changeAlert(false);
@@ -67,7 +68,7 @@ class Login extends Component {
         localStorage.setItem("token", response.data.authToken);
         this.props.login(response.data.isAdmin);
         this.props.cartItem(response.data.cartItem);
-        document.getElementById("dashboard").click();
+        this.props.history.push("/")
         this.props.changeAlert(true, "success", "Log in Successful");
         setTimeout(() => {
           this.props.changeAlert(false);
@@ -159,4 +160,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(null, mapDispatchToProps)(Login);
+export default connect(null, mapDispatchToProps)(withRouter(Login));
