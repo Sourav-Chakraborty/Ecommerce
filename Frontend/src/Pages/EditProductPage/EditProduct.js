@@ -9,6 +9,7 @@ import {
   TextField,
 } from "@material-ui/core";
 import { PhotoCamera } from "@material-ui/icons";
+import { Autocomplete } from "@material-ui/lab";
 import axios from "axios";
 import React, { Component } from "react";
 import { connect } from "react-redux";
@@ -29,8 +30,26 @@ class EditProduct extends Component {
       desc: "",
       price: "",
       img: "",
-      changeImg:""
+      changeImg:"",
+      brands:[],
+      categories:[]
     };
+  }
+  fetchCategories=()=>{
+    axios.get("http://localhost:5000/getAllCategories").then(res=>{
+      this.setState((prevstate)=>{
+        prevstate.categories=res.data
+        return prevstate
+      })
+    })
+  }
+  fetchBrands=()=>{
+    axios.get("http://localhost:5000/getAllBrands").then(res=>{
+      this.setState((prevstate)=>{
+        prevstate.brands=res.data
+        return prevstate
+      })
+    })
   }
   fetchProductInfo = async () => {
     const { id } = this.props.match.params;
@@ -124,8 +143,22 @@ class EditProduct extends Component {
         }
       })
   }
+  handleBrand = (e, value = 0) => {
+    this.setState((prevstate)=>{
+      prevstate.company=value
+      return prevstate
+    })
+  };
+  handleCategory=(e,value=0)=>{
+    this.setState((prevstate)=>{
+      prevstate.type=value
+      return prevstate
+    })
+  } 
   componentDidMount() {
     this.fetchProductInfo();
+    this.fetchBrands()
+    this.fetchCategories()
   }
   render() {
     const Input = styled('input')({
@@ -186,21 +219,29 @@ class EditProduct extends Component {
                   label="Product Name"
                   onChange={this.handleChange}
                 />
-                <TextField
-                  required
+                <Autocomplete
+                  name="oldBrand"
+                  freeSolo={true}
+                  style={{ width: "150px" }}
+                  id="combo-box-demo"
                   value={this.state.type}
-                  name="type"
-                  id="outlined-name"
-                  label="Product type"
-                  onChange={this.handleChange}
+                  onChange={(e, value) => this.handleCategory(e, value)}
+                  options={this.state.categories.map((option) => option.name)}
+                  renderInput={(params) => (
+                    <TextField {...params} value={this.state.type} label="Category" name="type" onChange={this.handleChange}/>
+                  )}
                 />
-                <TextField
+                <Autocomplete
+                  name="oldBrand"
+                  freeSolo={true}
+                  style={{ width: "150px" }}
+                  id="combo-box-demo"
                   value={this.state.company}
-                  required
-                  name="company"
-                  id="outlined-name"
-                  label="Company"
-                  onChange={this.handleChange}
+                  onChange={(e, value) => this.handleBrand(e, value)}
+                  options={this.state.brands.map((option) => option.name)}
+                  renderInput={(params) => (
+                    <TextField {...params} label="Brand" value={this.state.company} name="company" onChange={this.handleChange}/>
+                  )}
                 />
               </div>
               <div className="formRow">

@@ -1,0 +1,8 @@
+.manageCat{
+    height: 77vh;
+}
+.manageBrand{
+    display: flex;
+    margin-top: 35px;
+    justify-content: space-between;
+}

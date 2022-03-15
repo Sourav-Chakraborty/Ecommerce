@@ -57,8 +57,19 @@ class Navbar extends Component {
                   </>
               }
                        
-              { this.props.isAdmin &&  <Link
+              { this.props.isAdmin && <div className="mx-4"><Link
                     to="/createProduct"
+                    style={{
+                      color: "white",
+                      marginRight: "18px",
+                      textDecoration: "none",
+                      font: "caption",
+                    }}
+                  >
+                   Create Product
+                  </Link>
+                  <Link
+                    to="/manageCat&Brand"
                     style={{
                       color: "white",
                       marginRight: "10px",
@@ -66,8 +77,9 @@ class Navbar extends Component {
                       font: "caption",
                     }}
                   >
-                   Create Product
-                  </Link>}
+                   Manage Brands & Categories
+                  </Link>
+                  </div>}
               {!this.props.isLoggedin ? (
                 <div>
                
