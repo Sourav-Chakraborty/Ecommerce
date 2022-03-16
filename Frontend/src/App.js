@@ -22,6 +22,7 @@ import OrderPage from "./Pages/OrderPage/OrderPage";
 import EditProduct from "./Pages/EditProductPage/EditProduct";
 import ManageCatBrand from "./Pages/ManageCat&Brand/ManageCatBrand";
 import Homepage from "./Pages/Homepage/Homepage";
+import AllOrderPage from "./Pages/AllOrdersPage/AllOrderPage";
 export default class App extends Component {
   constructor(props) {
     super(props);
@@ -108,6 +109,9 @@ export default class App extends Component {
               </Route>
               <Route path="/manageCat&Brand">
                 <ManageCatBrand changeAlert={this.changeAlert} />
+              </Route>
+              <Route path="/allOrders">
+                <AllOrderPage changeAlert={this.changeAlert} />
               </Route>
             </Switch>
           </div>

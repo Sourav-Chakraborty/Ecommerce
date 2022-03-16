@@ -365,6 +365,12 @@ const emptyCart = async (req, res) => {
     email: req.user,
     products: userCart,
     date: d,
+    time:
+      new Date().getHours() +
+      ":" +
+      new Date().getMinutes() +
+      ":" +
+      new Date().getSeconds(),
   });
   res.json({ msg: "Removed successfully" });
 };
@@ -384,7 +390,11 @@ const getOrders = async (req, res) => {
         qty: orders[i].products[j].qty,
       });
     }
-    userOrders.push({ data: orders[i].date, products: productList });
+    userOrders.push({
+      data: orders[i].date,
+      time: orders[i].time,
+      products: productList,
+    });
   }
   res.json({ userOrders });
 };
@@ -448,34 +458,72 @@ const getAllBrands = (req, res) => {
   });
 };
 
-const editCategory=(req,res)=>{
-  const {oldCate,newCate}=req.body
-  Category.findOneAndReplace({name:oldCate},{name:newCate.toLowerCase()}).then((response)=>{
-    res.json({msg:"Successfully edited"})
-  })
-}
+const editCategory = (req, res) => {
+  const { oldCate, newCate } = req.body;
+  Category.findOneAndReplace(
+    { name: oldCate },
+    { name: newCate.toLowerCase() }
+  ).then((response) => {
+    res.json({ msg: "Successfully edited" });
+  });
+};
 
-const editBrands=(req,res)=>{
-  const {oldBrand,newBrand}=req.body
-  Company.findOneAndReplace({name:oldBrand},{name:newBrand.toLowerCase()}).then((response)=>{
-    res.json({msg:"Successfully edited"})
-  })
-}
+const editBrands = (req, res) => {
+  const { oldBrand, newBrand } = req.body;
+  Company.findOneAndReplace(
+    { name: oldBrand },
+    { name: newBrand.toLowerCase() }
+  ).then((response) => {
+    res.json({ msg: "Successfully edited" });
+  });
+};
 
-const deleteCategory=(req,res)=>{
-  const category=req.params.cate
-  Category.findOneAndDelete({name:category}).then(response=>{
-    res.json({msg:"Deleted successfully"})
-  })
-}
+const deleteCategory = (req, res) => {
+  const category = req.params.cate;
+  Category.findOneAndDelete({ name: category }).then((response) => {
+    res.json({ msg: "Deleted successfully" });
+  });
+};
 
-const deleteBrand=(req,res)=>{
-  const brand=req.params.brand
-  Company.findOneAndDelete({name:brand}).then(response=>{
-    res.json({msg:"Deleted successfully"})
+const deleteBrand = (req, res) => {
+  const brand = req.params.brand;
+  Company.findOneAndDelete({ name: brand }).then((response) => {
+    res.json({ msg: "Deleted successfully" });
+  });
+};
 
-  })
-}
+const getAllOrders = (req, response) => {
+  Order.find({}).then(async (res) => {
+    let orders = [];
+    for (let i = 0; i < res.length; i++) {
+      let order = [];
+
+      for (let j = 0; j < res[i].products.length; j++) {
+        const res1 = await Product.findById(res[i].products[j].productId);
+
+        order.push({
+          name: res1.name,
+          price: res1.price,
+          img: res1.img,
+          qty: res[i].products[j].qty,
+        });
+      }
+      const user=await Address.findOne({email:res[i].email})
+      orders.push({
+        id: res[i]._id,
+        user: user.name,
+        phone:user.mobile,
+        email:res[i].email,
+        address:user.address,
+        date: res[i].date,
+        time: res[i].time,
+        status: res[i].status,
+        products: order,
+      });
+    }
+    response.json(orders);
+  });
+};
 
 module.exports = {
   signUpController,
@@ -508,5 +556,6 @@ module.exports = {
   editCategory,
   editBrands,
   deleteCategory,
-  deleteBrand
+  deleteBrand,
+  getAllOrders,
 };

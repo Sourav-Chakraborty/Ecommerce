@@ -36,4 +36,5 @@ router.put("/editCategory",controllers.editCategory)
 router.put("/editBrand",controllers.editBrands)
 router.delete("/deleteCategory/:cate",controllers.deleteCategory)
 router.delete("/deleteBrand/:brand",controllers.deleteBrand)
+router.get("/getAllOrders",fetchUser,controllers.getAllOrders)
 module.exports=router

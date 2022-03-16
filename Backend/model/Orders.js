@@ -9,6 +9,14 @@ const orders=new Schema({
         type:Date,
         default:new Date
     },
+    time:{
+        type:String,
+        required:true
+    },
+    status:{
+        type:String,
+        default:"Order placed"
+    },
     products:{
         type:Array,
         default:[]

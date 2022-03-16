@@ -5,10 +5,10 @@ export default class SingleDayOrder extends Component {
       console.log(this.props)
     return (
       <div>
-          <h5 className="text-center">On {this.props.date.slice(0,10)}</h5>
+          <h5 className="text-center">On {this.props.date.slice(0,10)} at {this.props.time}</h5>
           {
              this.props.products.map((p)=>(
-                 <OrderItem img={p.img} name={p.name} price={p.price} qty={p.qty}/>
+                 <OrderItem img={p.img} name={p.name} key={p.img} price={p.price} qty={p.qty}/>
              ))
           }
         </div>

@@ -40,7 +40,7 @@ class OrderPage extends Component {
         <h2 className='text-center'>Your Orders</h2>
         {
           this.state.orders.map((order)=>(
-            <SingleDayOrder key={order._id} date={order.data} products={order.products}/>
+            <SingleDayOrder key={order._id} date={order.data} time={order.time} products={order.products}/>
           ))
         }
       </div>
