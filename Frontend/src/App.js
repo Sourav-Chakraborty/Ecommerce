@@ -9,7 +9,7 @@ import {
   ChangePassword,
   AlertBox,
 } from "./Components";
-import Homepage from "./Pages/Homepage/Homepage";
+import Homepage2 from "./Pages/Homepage/Homepage2";
 import CartPage from "./Pages/CartPage/CartPage";
 import CreateProduct from "./Pages/CreateProductPage/CreateProduct";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
@@ -21,6 +21,7 @@ import PayPage from "./Pages/PayPage/PayPage";
 import OrderPage from "./Pages/OrderPage/OrderPage";
 import EditProduct from "./Pages/EditProductPage/EditProduct";
 import ManageCatBrand from "./Pages/ManageCat&Brand/ManageCatBrand";
+import Homepage from "./Pages/Homepage/Homepage";
 export default class App extends Component {
   constructor(props) {
     super(props);
