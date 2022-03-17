@@ -17,6 +17,7 @@ export default class AllOrderPage extends Component {
           }
       }
       axios.get("http://localhost:5000/getAllOrders",config).then((response)=>{
+          response.data.reverse()
           this.setState((prevState)=>{
               prevState.allOrders=response.data
               return prevState

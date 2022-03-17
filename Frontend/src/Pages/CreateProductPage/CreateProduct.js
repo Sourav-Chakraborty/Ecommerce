@@ -31,7 +31,12 @@ class CreateProduct extends Component {
     };
   }
   fetchCategories=()=>{
-    axios.get("http://localhost:5000/getAllCategories").then(res=>{
+    const config = {
+      headers: {
+        "auth-token": localStorage.getItem("token"),
+      },
+    };
+    axios.get("http://localhost:5000/getAllCategories",config).then(res=>{
       this.setState((prevstate)=>{
         prevstate.categories=res.data
         return prevstate
@@ -39,7 +44,12 @@ class CreateProduct extends Component {
     })
   }
   fetchBrands=()=>{
-    axios.get("http://localhost:5000/getAllBrands").then(res=>{
+    const config = {
+      headers: {
+        "auth-token": localStorage.getItem("token"),
+      },
+    };
+    axios.get("http://localhost:5000/getAllBrands",config).then(res=>{
       this.setState((prevstate)=>{
         prevstate.brands=res.data
         return prevstate
@@ -124,7 +134,7 @@ componentDidMount(){
                   label="Product Name"
                   onChange={this.handleChange}
                 />
-                <Autocomplete
+                 <Autocomplete
                   name="oldBrand"
                   freeSolo={true}
                   style={{ width: "150px" }}
@@ -134,8 +144,8 @@ componentDidMount(){
                   renderInput={(params) => (
                     <TextField {...params} label="Category" name="type" onChange={this.handleChange}/>
                   )}
-                />
-                <Autocomplete
+                /> 
+                 <Autocomplete
                   name="oldBrand"
                   freeSolo={true}
                   style={{ width: "150px" }}
@@ -145,7 +155,7 @@ componentDidMount(){
                   renderInput={(params) => (
                     <TextField {...params} label="Brand" name="company" onChange={this.handleChange}/>
                   )}
-                />
+                /> 
               </div>
               <div className="formRow">
                 <TextField

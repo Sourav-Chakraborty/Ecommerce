@@ -394,6 +394,7 @@ const getOrders = async (req, res) => {
       data: orders[i].date,
       time: orders[i].time,
       products: productList,
+      status:orders[i].status
     });
   }
   res.json({ userOrders });
@@ -487,7 +488,8 @@ const deleteCategory = (req, res) => {
 
 const deleteBrand = (req, res) => {
   const brand = req.params.brand;
-  Company.findOneAndDelete({ name: brand }).then((response) => {
+  Company.findOneAndDelete({ name: brand.toLowerCase() }).then((response) => {
+  
     res.json({ msg: "Deleted successfully" });
   });
 };

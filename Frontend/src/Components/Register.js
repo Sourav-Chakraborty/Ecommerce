@@ -2,6 +2,7 @@ import { Avatar, Button, Grid, Paper, TextField } from "@material-ui/core";
 import {Link} from "react-router-dom"
 import axios from "axios"
 import React, { Component } from "react";
+import { withRouter } from "react-router-dom"; 
 import { login } from "../Redux_Store/actions/loginAction";
 import { connect } from "react-redux";
 class Register extends Component {
@@ -49,9 +50,9 @@ class Register extends Component {
    
     if(response.data.authToken){
       localStorage.setItem("token", response.data.authToken);
-      console.log("User created")
-      this.props.login(this.state.name)
-      document.getElementById("dashboard").click()
+     
+      this.props.login(response.data.isAdmin);
+      this.props.history.push("/")
       this.props.changeAlert(true,"success","Account created Successfully")
       setTimeout(()=>{
         this.props.changeAlert(false)
@@ -109,4 +110,4 @@ const mapDispatchToProps=(dispatch)=>{
   }
 }
 
-export default connect(null,mapDispatchToProps)(Register);
+export default connect(null,mapDispatchToProps)(withRouter(Register));

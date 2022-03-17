@@ -16,7 +16,12 @@ export default class ManageCatBrand extends Component {
     }
   }
   fetchCategories=()=>{
-    axios.get("http://localhost:5000/getAllCategories").then(res=>{
+    const config = {
+      headers: {
+        "auth-token": localStorage.getItem("token"),
+      },
+    };
+    axios.get("http://localhost:5000/getAllCategories",config).then(res=>{
       this.setState((prevstate)=>{
         prevstate.categories=res.data
         return prevstate
@@ -24,7 +29,12 @@ export default class ManageCatBrand extends Component {
     })
   }
   fetchBrands=()=>{
-    axios.get("http://localhost:5000/getAllBrands").then(res=>{
+    const config = {
+      headers: {
+        "auth-token": localStorage.getItem("token"),
+      },
+    };
+    axios.get("http://localhost:5000/getAllBrands",config).then(res=>{
       this.setState((prevstate)=>{
         prevstate.brands=res.data
         return prevstate
@@ -50,13 +60,14 @@ export default class ManageCatBrand extends Component {
     })
   }
   editCategory=()=>{
+    const config = {
+      headers: {
+        "auth-token": localStorage.getItem("token"),
+      },
+    };
     if(this.state.category==='' || this.state.newCate==="")
       return
-    const config={
-      headers:{
-        "auth-token":localStorage.getItem("token")
-      }
-    }
+    
     axios.put('http://localhost:5000/editCategory',{oldCate:this.state.category,newCate:this.state.newCate},config).then((res)=>{
       if(res.data.msg){
         this.props.changeAlert(true,"success","successfully edited")
@@ -90,7 +101,12 @@ export default class ManageCatBrand extends Component {
   deleteBrand=()=>{
     if(this.state.brand==="" )
     return
-    axios.delete(`http://localhost:5000/deleteBrand/${this.state.brand}`).then((res)=>{
+    const config = {
+      headers: {
+        "auth-token": localStorage.getItem("token"),
+      },
+    };
+    axios.delete(`http://localhost:5000/deleteBrand/${this.state.brand}`,config).then((res)=>{
       if(res.data.msg){
         this.props.changeAlert(true,"success","successfully Deleted")
         setTimeout(()=>{
@@ -104,7 +120,12 @@ export default class ManageCatBrand extends Component {
   deleteCategory=()=>{
     if(this.state.category==="" )
       return
-      axios.delete(`http://localhost:5000/deleteCategory/${this.state.category}`).then((res)=>{
+      const config = {
+        headers: {
+          "auth-token": localStorage.getItem("token"),
+        },
+      };
+      axios.delete(`http://localhost:5000/deleteCategory/${this.state.category}`,config).then((res)=>{
       if(res.data.msg){
         this.props.changeAlert(true,"success","successfully Deleted")
         setTimeout(()=>{

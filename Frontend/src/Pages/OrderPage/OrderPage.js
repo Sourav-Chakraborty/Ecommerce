@@ -4,6 +4,7 @@ import {withRouter} from "react-router-dom"
 
 import { connect } from 'react-redux'
 import SingleDayOrder from '../../Components/SingleDayOrder'
+import { Container } from '@material-ui/core'
 
 class OrderPage extends Component {
 
@@ -23,6 +24,7 @@ class OrderPage extends Component {
     }
     axios.get("http://localhost:5000/getOrders",config).then(res=>{
       if(res.data.userOrders){
+        res.data.userOrders.reverse()
       this.setState((prevstate)=>{
         prevstate.orders=res.data.userOrders
         return prevstate
@@ -34,16 +36,16 @@ class OrderPage extends Component {
     this.fetchOrders()
   }
   render() {
-    console.log(this.state.orders)
+   
     return (
-      <div>
+      <Container style={{minHeight:"77vh"}}>
         <h2 className='text-center'>Your Orders</h2>
         {
           this.state.orders.map((order)=>(
-            <SingleDayOrder key={order._id} date={order.data} time={order.time} products={order.products}/>
+            <SingleDayOrder key={order._id} date={order.data} time={order.time} status={order.status} products={order.products}/>
           ))
         }
-      </div>
+      </Container>
     )
   }
 }

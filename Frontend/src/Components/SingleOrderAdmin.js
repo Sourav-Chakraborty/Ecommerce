@@ -26,7 +26,10 @@ export default class SingleOrderAdmin extends Component {
       }
     }
     axios.put(`http://localhost:5000/changeOrderStatus/${this.props.order.id}`,{newStatus:e.target.value},config).then((res)=>{
-    
+      this.props.changeAlert(true,"Success","Successfully changed status")
+      setTimeout(() => {
+        this.props.changeAlert(false)
+      }, 5000);
     })
     this.setState((prevState)=>{
       prevState.orderStatus=e.target.value
@@ -91,8 +94,8 @@ export default class SingleOrderAdmin extends Component {
                   >
                     <MenuItem value={"Order placed"}>Order placed</MenuItem>
                     <MenuItem value={"Shipped"}>Shipped</MenuItem>
-                    <MenuItem value={"Delivary office"}>
-                      Delivary office
+                    <MenuItem value={"Reached Delivary office"}>
+                      Reached Delivary office
                     </MenuItem>
                     <MenuItem value={"Out for delivery"}>
                       Out for delivery
