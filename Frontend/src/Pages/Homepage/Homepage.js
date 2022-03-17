@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Carousel from "../../Components/Carousel";
 import {
+  Box,
   Button,
   Card,
   CardActions,
@@ -30,23 +31,38 @@ export default class Homepage extends Component {
       price: [1000, 50000],
       userBrands: [],
       userCate: [],
+      autoSuggestion: [],
     };
     this.deleteProduct.bind(this);
   }
   fetchAllProducts = async () => {
     const response = await axios.get("http://localhost:5000/getAllProduct");
     const productsArray = response.data.length ? response.data : [];
+    let suggestions = [];
+    productsArray.forEach((element) => {
+      suggestions.push({ label: element.name, price: element.price });
+    });
+
     this.setState((prevState) => {
       prevState.allproducts = productsArray;
       prevState.product = productsArray;
+      prevState.autoSuggestion = suggestions;
       return prevState;
     });
   };
-  handleChange = (e) => {
+  handleChange = (e,reason="") => {
+    console.log(reason)
+    if(e===null){
+      this.setState((prevState)=>{
+        prevState.product=this.state.allproducts
+        return prevState
+      })
+      return
+    }
     const productsArray = [];
-    console.log(this.state.allproducts);
+    
     this.state.allproducts.forEach((p) => {
-      if (p.name.toLowerCase().includes(e.target.value.toLowerCase()))
+      if (p.name.toLowerCase().includes(e.toLowerCase()))
         productsArray.push(p);
     });
     this.setState((prevState) => {
@@ -76,7 +92,7 @@ export default class Homepage extends Component {
         "auth-token": localStorage.getItem("token"),
       },
     };
-    axios.get("http://localhost:5000/getAllCategories",config).then((res) => {
+    axios.get("http://localhost:5000/getAllCategories", config).then((res) => {
       this.setState((prevstate) => {
         prevstate.categories = res.data;
         return prevstate;
@@ -89,7 +105,7 @@ export default class Homepage extends Component {
         "auth-token": localStorage.getItem("token"),
       },
     };
-    axios.get("http://localhost:5000/getAllBrands",config).then((res) => {
+    axios.get("http://localhost:5000/getAllBrands", config).then((res) => {
       this.setState((prevstate) => {
         prevstate.brands = res.data;
         return prevstate;
@@ -113,27 +129,28 @@ export default class Homepage extends Component {
   handleCategory = (e, value) => {
     let arrayOfCate = [];
     for (let i = 0; i < value.length; i++) arrayOfCate.push(value[i].name);
-    this.setState((prevstate) => {
-      prevstate.userCate = arrayOfCate;
-      return prevstate;
-    },
-    () => {
-      this.userFilter();
-    });
+    this.setState(
+      (prevstate) => {
+        prevstate.userCate = arrayOfCate;
+        return prevstate;
+      },
+      () => {
+        this.userFilter();
+      }
+    );
   };
   handlePriceRange = (e, value) => {
-  
-    
-    this.setState((prevstate) => {
-      prevstate.price = value;
-      return prevstate;
-    },
-    () => {
-      this.userFilter();
-    });
+    this.setState(
+      (prevstate) => {
+        prevstate.price = value;
+        return prevstate;
+      },
+      () => {
+        this.userFilter();
+      }
+    );
   };
   userFilter = () => {
-    
     let userProducts = [];
 
     if (this.state.userBrands.length) {
@@ -143,30 +160,27 @@ export default class Homepage extends Component {
             userProducts.push(p);
         });
       });
-    }
-    else
-      userProducts=this.state.allproducts
-    let userProducts2=[]
-    if(this.state.userCate.length){
+    } else userProducts = this.state.allproducts;
+    let userProducts2 = [];
+    if (this.state.userCate.length) {
+      this.state.userCate.forEach((uc) => {
+        userProducts.forEach((up) => {
+          if (up.type.toLowerCase() === uc.toLowerCase())
+            userProducts2.push(up);
+        });
+      });
+    } else userProducts2 = userProducts;
 
-      this.state.userCate.forEach(uc=>{
-          userProducts.forEach((up)=>{
-            if(up.type.toLowerCase()===uc.toLowerCase())
-              userProducts2.push(up)
-          })
-      })
-    }
-    else
-      userProducts2=userProducts
-   
-    let finalProducts=[]
-    userProducts2.forEach(up=>{
-     
-      if(parseInt(this.state.price[0])<parseInt(up.price) && parseInt(this.state.price[1])>parseInt(up.price)){
-        console.log("inside range")
-        finalProducts.push(up)
+    let finalProducts = [];
+    userProducts2.forEach((up) => {
+      if (
+        parseInt(this.state.price[0]) < parseInt(up.price) &&
+        parseInt(this.state.price[1]) > parseInt(up.price)
+      ) {
+        console.log("inside range");
+        finalProducts.push(up);
       }
-    })
+    });
     this.setState((prevState) => {
       prevState.product = finalProducts;
       return prevState;
@@ -178,7 +192,14 @@ export default class Homepage extends Component {
     this.fetchCategories();
   }
   render() {
-    //  console.log(this.state)
+    setTimeout(() => {
+      const close = document.getElementsByClassName(
+        "MuiButtonBase-root MuiIconButton-root MuiAutocomplete-clearIndicator MuiAutocomplete-clearIndicatorDirty"
+      )[0];
+      close.addEventListener("click", () => {
+        this.handleChange("");
+      });
+    }, 100);
     return (
       <>
         <Carousel />
@@ -249,7 +270,6 @@ export default class Homepage extends Component {
                       />
                     </Typography>
                   </CardContent>
-                 
                 </Card>
               </div>
             </Grid>
@@ -257,13 +277,19 @@ export default class Homepage extends Component {
             <Grid item xs={10} md={10} sm={12}>
               <Grid align="center">
                 <h3 className="my-3">Our products</h3>
-                <TextField
-                  onChange={this.handleChange}
-                  id="outlined-basic"
-                  variant="outlined"
-                  placeholder="Search for items"
-                  style={{ width: "60%", height: "10px", marginBottom: "38px" }}
-                />
+                <Box>
+                <Autocomplete
+                  id="combo-box-demo"
+                  freeSolo
+                  clearIcon={()=> console.log("Hello")}
+                  style={{width:'60%',padding:"1px"}}
+                  onnClose={()=> console.log("closed")}
+                  onChange={(e,value,reason)=> this.handleChange(value,reason)}
+                  options={this.state.autoSuggestion.map((option) => option.label)}
+                  renderInput={(params) => (
+                    <TextField   {...params} label="Search for Items"  onChange={(e)=>this.handleChange(e.target.value)}/>
+                  )}
+                /></Box>
               </Grid>
               <div className="caroselView my-3">
                 {this.state.product.map((p) => (
