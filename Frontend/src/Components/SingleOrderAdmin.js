@@ -8,17 +8,34 @@ import {
   Select,
   Typography,
 } from "@material-ui/core";
+import axios from "axios"
 import React, { Component } from "react";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import OrderItem from "./OrderItem";
 export default class SingleOrderAdmin extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      orderStatus:this.props.order.status
+    };
+  }
+  handleStatusChange=(e)=>{
+    const config={
+      headers:{
+        "auth-token":localStorage.getItem("token")
+      }
+    }
+    axios.put(`http://localhost:5000/changeOrderStatus/${this.props.order.id}`,{newStatus:e.target.value},config).then((res)=>{
+    
+    })
+    this.setState((prevState)=>{
+      prevState.orderStatus=e.target.value
+      return prevState
+    })
   }
   render() {
-    const status=this.props.order.status
-    console.log(status)
+    
+   
     return (
       <div>
         <Accordion className="my-3">
@@ -37,14 +54,14 @@ export default class SingleOrderAdmin extends Component {
               <span
                 style={{
                   color:
-                    this.props.order.status === "Order placed"
+                  this.state.orderStatus === "Order placed"
                       ? "red"
-                      : this.props.order.status === "Delevired"
+                      : this.state.orderStatus === "Delevired"
                       ? "green"
-                      : "yellow",
+                      : "violet",
                 }}
               >
-                {this.props.order.status}
+                {this.state.orderStatus}
               </span>
             </div>
           </AccordionSummary>
@@ -68,9 +85,9 @@ export default class SingleOrderAdmin extends Component {
                     style={{width:"140px"}}
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
-                    value={this.props.order.status}
+                    value={this.state.orderStatus}
                     label="Change status"
-                    onChange={(e) => console.log(e)}
+                    onChange={this.handleStatusChange}
                   >
                     <MenuItem value={"Order placed"}>Order placed</MenuItem>
                     <MenuItem value={"Shipped"}>Shipped</MenuItem>

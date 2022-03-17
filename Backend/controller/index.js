@@ -525,6 +525,16 @@ const getAllOrders = (req, response) => {
   });
 };
 
+const changeOrderStatus=(req,res)=>{
+  const id=req.params.id
+  const {newStatus}=req.body
+  Order.findByIdAndUpdate(id,{status:newStatus}).then((response)=>{
+    res.json(response)
+  }) 
+}
+
+
+
 module.exports = {
   signUpController,
   signInController,
@@ -558,4 +568,5 @@ module.exports = {
   deleteCategory,
   deleteBrand,
   getAllOrders,
+  changeOrderStatus
 };
