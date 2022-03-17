@@ -71,7 +71,12 @@ export default class Homepage extends Component {
     }
   };
   fetchCategories = () => {
-    axios.get("http://localhost:5000/getAllCategories").then((res) => {
+    const config = {
+      headers: {
+        "auth-token": localStorage.getItem("token"),
+      },
+    };
+    axios.get("http://localhost:5000/getAllCategories",config).then((res) => {
       this.setState((prevstate) => {
         prevstate.categories = res.data;
         return prevstate;
@@ -79,7 +84,12 @@ export default class Homepage extends Component {
     });
   };
   fetchBrands = () => {
-    axios.get("http://localhost:5000/getAllBrands").then((res) => {
+    const config = {
+      headers: {
+        "auth-token": localStorage.getItem("token"),
+      },
+    };
+    axios.get("http://localhost:5000/getAllBrands",config).then((res) => {
       this.setState((prevstate) => {
         prevstate.brands = res.data;
         return prevstate;
@@ -112,7 +122,8 @@ export default class Homepage extends Component {
     });
   };
   handlePriceRange = (e, value) => {
-    value.sort();
+  
+    
     this.setState((prevstate) => {
       prevstate.price = value;
       return prevstate;
@@ -147,11 +158,14 @@ export default class Homepage extends Component {
     }
     else
       userProducts2=userProducts
-    
+   
     let finalProducts=[]
     userProducts2.forEach(up=>{
-      if(this.state.price[0]<up.price && this.state.price[1]>up.price)
+     
+      if(parseInt(this.state.price[0])<parseInt(up.price) && parseInt(this.state.price[1])>parseInt(up.price)){
+        console.log("inside range")
         finalProducts.push(up)
+      }
     })
     this.setState((prevState) => {
       prevState.product = finalProducts;
