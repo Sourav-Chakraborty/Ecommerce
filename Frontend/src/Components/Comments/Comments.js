@@ -9,7 +9,8 @@ import { connect } from "react-redux";
     super(props);
     this.state = {
         replyBoxVisible:false,
-        comment:''
+        comment:'',
+        isOwner:false
     };
   }
   handleChange=(e)=>{
@@ -48,9 +49,35 @@ import { connect } from "react-redux";
         return prevState
       })
   }
+  isOwner=async ()=>{
+    const configure={
+      headers: {
+        "auth-token": localStorage.getItem("token"),
+      },
+    }
+    const response=await axios.get(`http://localhost:5000/isCommentOwner/${this.props.comment._id}`,configure)
+    this.setState((prevState)=>{
+      prevState.isOwner=response.data.isOwner
+      return prevState
+    })
+  }
+  deleteComment=async ()=>{
+    const configure={
+      headers: {
+        "auth-token": localStorage.getItem("token"),
+      },
+    }
+    const response=await axios.delete(`http://localhost:5000/deleteComment/${this.props.comment._id}`,configure)
+    if(response.data.done)
+      this.props.fetchProductCmt()
+
+  }
+  componentDidMount(){
+    this.isOwner()
+  }
+
   render() {
     const {comment,allComments}=this.props
-    console.log("logged in status ",this.props.isLoggedin)
     return <div>
         <Comment
       author={
@@ -66,7 +93,8 @@ import { connect } from "react-redux";
       content={
           <>
         <h6 >{ comment.body} </h6>
-       {this.props.isLoggedin && <p className="replyBtn" onClick={this.changeReplyBoxVisibility}>Reply</p>}
+       {this.props.isLoggedin && <p className="replyBtn mx-2" onClick={this.changeReplyBoxVisibility}>Reply</p>}
+       {this.state.isOwner && <p className="replyBtn mx-2" onClick={this.deleteComment}>Delete</p>}
         {this.state.replyBoxVisible &&  <form className="my-2" onSubmit={this.handleSubmit}>
             <textarea id="text" cols={100} onChange={this.handleChange} className="replyBox" type="text" placeholder="Type your reply"  name="comment"></textarea>
             <button type="submit">Submit</button>

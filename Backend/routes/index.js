@@ -40,4 +40,6 @@ router.get("/getAllOrders",fetchUser,controllers.getAllOrders)
 router.put("/changeOrderStatus/:id",fetchUser,controllers.changeOrderStatus)
 router.post("/addComment",fetchUser,controllers.addComment)
 router.get("/getProductComments/:id",controllers.getProductCmt)
+router.get("/isCommentOwner/:id",fetchUser,controllers.isOwnerOfComment)
+router.delete("/deleteComment/:id",fetchUser,controllers.deleteComment)
 module.exports=router

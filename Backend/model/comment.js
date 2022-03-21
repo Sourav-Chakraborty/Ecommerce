@@ -11,10 +11,12 @@ const comments=new Schema({
         required:true       
     },
     parent:{
-       
+        type:String,
+       default:undefined
     },
     child:{
-       
+       type:Array,
+       default:[]
     },
     body:{
         type:String

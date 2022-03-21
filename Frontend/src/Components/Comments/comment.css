@@ -5,7 +5,9 @@
     outline: none;
 }
 .replyBtn{
-    color:gray
+    color:gray;
+    display: inline;
+
 
 }
 .replyBtn:hover{

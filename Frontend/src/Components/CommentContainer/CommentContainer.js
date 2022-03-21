@@ -16,7 +16,8 @@ import { connect } from 'react-redux'
     getParentCmt=()=>{
         const parentCmts=[]
         this.state.allComments.map(c=>{
-            if(!c.parent)
+           
+             if(!c.parent.length )
                 parentCmts.push(c)
         })
         return parentCmts

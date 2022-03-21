@@ -542,13 +542,19 @@ const addComment=async (req,res)=>{
   
   if(req.body.parent)
       parent=req.body.parent
+  else
+    parent=""
   if(req.body.child)
     child=req.body.child
+  else
+    child=[]
   const user=await User.findOne({email:req.user})
   
-   await Comment.create({
+  const comment=await Comment.create({
      parent,child,product:req.body.product,user:{id:user.id,name:user.name},body:req.body.comment
    })
+   if(req.body.parent)
+    await Comment.findByIdAndUpdate(req.body.parent,{$push:{child:comment.id}})
   res.json({msg:"Successfully posted"})
 }
 
@@ -558,6 +564,43 @@ const getProductCmt=async (req,res)=>{
   
   res.json(comments)
 }
+
+const isOwnerOfComment=async (req,res)=>{
+  const id=req.params.id
+  const comment=await Comment.findById(id)
+  const user=await User.findOne({email:req.user})
+  if(user.id===comment.user.id)
+    return res.json({isOwner:true})
+  else
+    return res.json({isOwner:false})
+
+}
+
+const deleteComment=async (req,res)=>{
+  const id=req.params.id
+  const comment=await Comment.findById(id)
+  const user=await User.findOne({email:req.user})
+  if(user.id===comment.user.id){
+    if(comment.child.length){
+        
+        await Comment.findByIdAndUpdate(id,{body:"[This message is deleted]"})  
+    }
+    else
+      await Comment.findByIdAndDelete(id)
+    if(comment.parent.length){
+      
+      await Comment.findByIdAndUpdate(comment.parent,{$pull:{child:id}})
+    }
+
+    return res.json({done:true})
+
+  }
+    
+  else
+    return res.json({done:false})
+}
+
+
 
 module.exports = {
   signUpController,
@@ -594,5 +637,7 @@ module.exports = {
   getAllOrders,
   changeOrderStatus,
   addComment,
-  getProductCmt
+  getProductCmt,
+  isOwnerOfComment,
+  deleteComment
 };
