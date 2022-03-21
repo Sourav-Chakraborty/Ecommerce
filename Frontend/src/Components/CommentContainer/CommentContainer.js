@@ -67,7 +67,7 @@ import { connect } from 'react-redux'
   }
 }
 const mapStateToProps = (state) => {
-  console.log(state)
+ 
   return {
     isLoggedin: state.loginReducers.isLoggedin,
     isAdmin:state.loginReducers.isAdmin,

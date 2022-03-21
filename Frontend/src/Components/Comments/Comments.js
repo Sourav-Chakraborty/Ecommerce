@@ -3,7 +3,8 @@ import { Comment } from 'antd'
 import { Avatar } from "@material-ui/core";
 import "./comment.css"
 import axios from "axios";
-export default class Comments extends Component {
+import { connect } from "react-redux";
+ class Comments extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -38,18 +39,18 @@ export default class Comments extends Component {
      this.props.fetchProductCmt()
   }
   changeReplyBoxVisibility=()=>{
-
-      const currentStatus=this.state.replyBoxVisible
+   
+    const currentStatus=this.state.replyBoxVisible
     
-      this.setState((prevState)=>{
+    this.setState((prevState)=>{
 
-          prevState.replyBoxVisible=!currentStatus
-          return prevState
+        prevState.replyBoxVisible=!currentStatus
+        return prevState
       })
   }
   render() {
     const {comment,allComments}=this.props
-    
+    console.log("logged in status ",this.props.isLoggedin)
     return <div>
         <Comment
       author={
@@ -65,9 +66,9 @@ export default class Comments extends Component {
       content={
           <>
         <h6 >{ comment.body} </h6>
-        <p className="replyBtn" onClick={this.changeReplyBoxVisibility}>Reply</p>
-        {this.state.replyBoxVisible && <form className="my-2" onSubmit={this.handleSubmit}>
-            <textarea id="text" cols={150} onChange={this.handleChange} className="replyBox" type="text" placeholder="Type your reply"  name="comment"></textarea>
+       {this.props.isLoggedin && <p className="replyBtn" onClick={this.changeReplyBoxVisibility}>Reply</p>}
+        {this.state.replyBoxVisible &&  <form className="my-2" onSubmit={this.handleSubmit}>
+            <textarea id="text" cols={100} onChange={this.handleChange} className="replyBox" type="text" placeholder="Type your reply"  name="comment"></textarea>
             <button type="submit">Submit</button>
         </form>}
 
@@ -79,6 +80,7 @@ export default class Comments extends Component {
       this.childComments().map(c => (
         <Comments 
           fetchProductCmt={this.props.fetchProductCmt}
+          isLoggedin={this.props.isLoggedin}
           product={this.props.product}
           id={c._id}
           key={c._id} 
@@ -92,3 +94,12 @@ export default class Comments extends Component {
     </div>;
   }
 }
+const mapStateToProps = (state) => {
+ 
+  return {
+    isLoggedin: state.loginReducers.isLoggedin,
+    isAdmin:state.loginReducers.isAdmin,
+    cartItem:state.cartItemNoReducers.item
+  };
+};
+export default connect(mapStateToProps)(Comments)
