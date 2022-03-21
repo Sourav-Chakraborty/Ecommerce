@@ -1,0 +1,7 @@
+.cmtBox{
+    width: 100%;
+    border: none;
+}
+.cmtBox:focus{
+    outline: none;
+}

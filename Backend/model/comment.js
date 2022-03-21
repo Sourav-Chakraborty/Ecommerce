@@ -7,18 +7,19 @@ const comments=new Schema({
         required:true
     },
     user:{
-        type:String,
-        required:true
+        type:Object,
+        required:true       
     },
     parent:{
-        type:String
+       
     },
     child:{
-        type:String
+       
     },
     body:{
         type:String
-    }
+    },
+   
 })
 
 const Comment=mongoose.model("Comment",comments)

@@ -148,7 +148,7 @@ class Navbar extends Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state)
+  
   return {
     isLoggedin: state.loginReducers.isLoggedin,
     isAdmin:state.loginReducers.isAdmin,

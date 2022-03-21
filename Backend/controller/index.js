@@ -9,6 +9,7 @@ const Address = require("../model/address");
 const Order = require("../model/Orders");
 const Category = require("../model/category");
 const Company = require("../model/company");
+const Comment=require("../model/comment")
 const { findOne } = require("../model/user");
 const sendEmail = require("../sendEmailSendgrid");
 const { response } = require("express");
@@ -535,7 +536,28 @@ const changeOrderStatus=(req,res)=>{
   }) 
 }
 
+const addComment=async (req,res)=>{
 
+  let parent=null,child=null
+  
+  if(req.body.parent)
+      parent=req.body.parent
+  if(req.body.child)
+    child=req.body.child
+  const user=await User.findOne({email:req.user})
+  
+   await Comment.create({
+     parent,child,product:req.body.product,user:{id:user.id,name:user.name},body:req.body.comment
+   })
+  res.json({msg:"Successfully posted"})
+}
+
+const getProductCmt=async (req,res)=>{
+  const id=req.params.id
+  const comments=await Comment.find({product:id})
+  
+  res.json(comments)
+}
 
 module.exports = {
   signUpController,
@@ -570,5 +592,7 @@ module.exports = {
   deleteCategory,
   deleteBrand,
   getAllOrders,
-  changeOrderStatus
+  changeOrderStatus,
+  addComment,
+  getProductCmt
 };

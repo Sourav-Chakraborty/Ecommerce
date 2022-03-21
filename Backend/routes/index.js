@@ -38,4 +38,6 @@ router.delete("/deleteCategory/:cate",fetchUser,controllers.deleteCategory)
 router.delete("/deleteBrand/:brand",fetchUser,controllers.deleteBrand)
 router.get("/getAllOrders",fetchUser,controllers.getAllOrders)
 router.put("/changeOrderStatus/:id",fetchUser,controllers.changeOrderStatus)
+router.post("/addComment",fetchUser,controllers.addComment)
+router.get("/getProductComments/:id",controllers.getProductCmt)
 module.exports=router

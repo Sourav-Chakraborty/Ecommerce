@@ -6,7 +6,7 @@ import "./productpage.css";
 import { connect } from "react-redux";
 import Rating from '@material-ui/lab/Rating';
 import { incrementCartVal } from "../../Redux_Store/actions/cartAction";
-import CommentContainer from "../../Components/CommentContainer";
+import CommentContainer from "../../Components/CommentContainer/CommentContainer";
 class ProductPage extends Component {
   constructor(props) {
     super(props);
@@ -158,7 +158,7 @@ class ProductPage extends Component {
           </Grid>
           <Card className="productCmt p-3 m-3">
 
-          <CommentContainer/>
+          <CommentContainer product={this.props.match.params.id}/>
           </Card>
 
         </Container>

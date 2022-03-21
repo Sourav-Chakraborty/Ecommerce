@@ -4,6 +4,11 @@
 .replyBox:focus{
     outline: none;
 }
+.replyBtn{
+    color:gray
+
+}
 .replyBtn:hover{
     cursor: pointer;
+   
 }
