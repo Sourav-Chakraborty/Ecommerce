@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import 'antd/dist/antd.css';
 import { PersistGate } from 'redux-persist/integration/react'
 import getStore from "./configureStore"
 import App from "./App";

@@ -1,0 +1,9 @@
+.replyBox{
+    border: none;
+}
+.replyBox:focus{
+    outline: none;
+}
+.replyBtn:hover{
+    cursor: pointer;
+}
