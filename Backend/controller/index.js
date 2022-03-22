@@ -624,6 +624,23 @@ const addToCompare=async (req,res)=>{
   return res.json({msg:"Successfully added to your compare list"})
 }
 
+const getCompareList=async (req,res)=>{
+  const user=await User.findOne({email:req.user})
+  let compareList=[]
+  for(let i=0;i<user.compare.length;i++){
+    const product=await Product.findById(user.compare[i])
+    compareList.push(product)
+  }
+  return res.json({compareList})
+}
+
+const removeFromCompare=async (req,res)=>{
+  const id=req.body.productId
+  await User.findOneAndUpdate({email:req.user},{$pull:{compare:id}})
+  return res.json({done:true})
+}
+
+
 module.exports = {
   signUpController,
   signInController,
@@ -663,5 +680,7 @@ module.exports = {
   isOwnerOfComment,
   deleteComment,
   editComment,
-  addToCompare
+  addToCompare,
+  getCompareList,
+  removeFromCompare
 };
