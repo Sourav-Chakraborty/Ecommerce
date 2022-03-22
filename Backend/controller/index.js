@@ -600,6 +600,18 @@ const deleteComment=async (req,res)=>{
     return res.json({done:false})
 }
 
+const editComment=async (req,res)=>{
+  const id=req.params.id
+  const comment=await Comment.findById(id)
+  const user=await User.findOne({email:req.user})
+  if(user.id===comment.user.id){
+    await Comment.findByIdAndUpdate(id,{body:req.body.body})
+    return res.json({done:true})
+  }
+  else
+    return res.json({done:false})
+  
+}
 
 
 module.exports = {
@@ -639,5 +651,6 @@ module.exports = {
   addComment,
   getProductCmt,
   isOwnerOfComment,
-  deleteComment
+  deleteComment,
+  editComment
 };
