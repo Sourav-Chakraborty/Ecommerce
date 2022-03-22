@@ -106,7 +106,8 @@ const mapDispatchToProps=(dispatch)=>{
   return{
     login:(name)=>{
         dispatch(login(name))
-    }
+    },
+    
   }
 }
 

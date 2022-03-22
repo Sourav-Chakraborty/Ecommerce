@@ -104,7 +104,6 @@ class Comments extends Component {
       },
     };
     const response=await axios.put(`http://localhost:5000/editComment/${this.props.comment._id}`,{body:this.state.editTextArea},configure)
-    console.log(response)
     if(response.data.done){
     this.props.fetchProductCmt();
     this.handleEditMode()

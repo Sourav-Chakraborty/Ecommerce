@@ -6,6 +6,7 @@ import "./productpage.css";
 import { connect } from "react-redux";
 import Rating from '@material-ui/lab/Rating';
 import { incrementCartVal } from "../../Redux_Store/actions/cartAction";
+import {addToCompare} from "../../Redux_Store/actions/compareAction"
 import CommentContainer from "../../Components/CommentContainer/CommentContainer";
 class ProductPage extends Component {
   constructor(props) {
@@ -81,6 +82,30 @@ class ProductPage extends Component {
    
   };
 
+  handleAddToCompare=async()=>{
+    const { id } = this.props.match.params;
+    const config = {
+      headers: {
+        "auth-token": localStorage.getItem("token"),
+      },
+    };
+    const response=await axios.put("http://localhost:5000/addToCompare",{id},config)
+    if(response.data.msg==="Successfully added to your compare list"){
+      this.props.incrementCompare()
+      this.props.changeAlert(true,"success",response.data.msg)
+      setTimeout(()=>{
+      this.props.changeAlert(false)
+
+      },5000)
+    }
+    else{
+      this.props.changeAlert(true,"error",response.data.msg)
+      setTimeout(()=>{
+      this.props.changeAlert(false)
+
+      },5000)
+    }
+  }
   componentDidMount() {
     this.fetchProductInfo();
   }
@@ -147,9 +172,10 @@ class ProductPage extends Component {
                 className="productPageBtn green mx-2"
                 variant="contained"
                 color="success"
+                onClick={this.handleAddToCompare}
                 disabled={!this.props.isLoggedin && true}
               >
-                Buy
+                Add to Compair
               </Button>
             </Grid>
             <Grid xs={6} className="productPagePrice">
@@ -175,6 +201,9 @@ const mapDispatchToProps=(dispatch)=>{
   return{
     incrementCart:()=>{
       dispatch(incrementCartVal())
+    },
+    incrementCompare:(n=1)=>{
+      dispatch(addToCompare(n))
     }
   }
 }

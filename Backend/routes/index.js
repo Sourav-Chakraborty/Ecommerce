@@ -43,4 +43,5 @@ router.get("/getProductComments/:id",controllers.getProductCmt)
 router.get("/isCommentOwner/:id",fetchUser,controllers.isOwnerOfComment)
 router.delete("/deleteComment/:id",fetchUser,controllers.deleteComment)
 router.put("/editComment/:id",fetchUser,controllers.editComment)
+router.put("/addToCompare",fetchUser,controllers.addToCompare)
 module.exports=router

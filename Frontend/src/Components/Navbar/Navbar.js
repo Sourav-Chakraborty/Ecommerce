@@ -3,6 +3,8 @@ import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { logout } from "../../Redux_Store/actions/loginAction";
 import AddShoppingCartIcon from "@material-ui/icons/AddShoppingCart"
+import CompareIcon from "@material-ui/icons/Compare"
+
 import "./navbar.css"
 import { AppBar, Box, Toolbar, Typography } from "@material-ui/core";
 class Navbar extends Component {
@@ -15,6 +17,7 @@ class Navbar extends Component {
 
     setTimeout(() => {
       this.props.changeAlert(false);
+
     }, 5000);
   };
 
@@ -37,7 +40,21 @@ class Navbar extends Component {
                 <Link style={{textDecoration:"none",color:"white"}} to="/">Ecommerce</Link>
               </Typography>
               
-             {(this.props.isLoggedin && !this.props.isAdmin ) && <><Link style={{
+             {(this.props.isLoggedin && !this.props.isAdmin ) && <>
+             
+              <Link 
+                    to="/compare"
+                    style={{
+                      color: "white",
+                      marginRight: "15px",
+                      textDecoration: "none",
+                      font: "caption",
+                    }}
+                  >
+                   <CompareIcon/><span className="cartItemNo">{this.props.compareItem}</span>
+                  </Link>
+             
+             <Link style={{
                           color: "white",
                           marginRight: "10px",
                           textDecoration: "none",
@@ -152,7 +169,8 @@ const mapStateToProps = (state) => {
   return {
     isLoggedin: state.loginReducers.isLoggedin,
     isAdmin:state.loginReducers.isAdmin,
-    cartItem:state.cartItemNoReducers.item
+    cartItem:state.cartItemNoReducers.item,
+    compareItem:state.compareReducers.item
   };
 };
 const mapDispatchToProps = (dispatch) => {
@@ -160,6 +178,7 @@ const mapDispatchToProps = (dispatch) => {
     logout: () => {
       dispatch(logout());
     },
+    
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Navbar));

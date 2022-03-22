@@ -6,6 +6,7 @@ import { login } from "../Redux_Store/actions/loginAction";
 import { Avatar, Button, Grid, Paper, TextField } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { setCartVal } from "../Redux_Store/actions/cartAction";
+import {setToCompare} from "../Redux_Store/actions/compareAction"
 import GoogleLogin from "react-google-login";
 
 class Login extends Component {
@@ -49,6 +50,7 @@ class Login extends Component {
       localStorage.setItem("token", response.data.authToken);
       this.props.login(response.data.isAdmin);
       this.props.cartItem(response.data.cartItem);
+      this.props.compareItem(response.data.compareItem)
       this.props.history.push("/")
       this.props.changeAlert(true, "success", "Log in Successful");
       setTimeout(() => {
@@ -157,6 +159,9 @@ const mapDispatchToProps = (dispatch) => {
     cartItem: (val) => {
       dispatch(setCartVal(val));
     },
+    compareItem:(val=0)=>{
+      dispatch(setToCompare(val))
+    }
   };
 };
 

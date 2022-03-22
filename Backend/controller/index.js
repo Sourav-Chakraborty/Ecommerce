@@ -44,7 +44,7 @@ const signUpController = async (req, res) => {
   };
   const authToken = jwt.sign(data, JSONSECRET);
   console.log(data);
-  res.json({ authToken, isAdmin: false, cartItem: 0 });
+  res.json({ authToken, isAdmin: false, cartItem: 0,compareItem:0 });
 };
 
 const signInController = async (req, res) => {
@@ -64,9 +64,10 @@ const signInController = async (req, res) => {
     },
   };
   const cartItem = user.cart.length;
+  const compareItem=user.compare.length
   const authToken = jwt.sign(data, JSONSECRET);
-  console.log("no of item in cart", cartItem);
-  res.json({ authToken, isAdmin: user.isAdmin, cartItem });
+  
+  res.json({ authToken, isAdmin: user.isAdmin, cartItem,compareItem });
 };
 
 const forgetPassword = async (req, res) => {
@@ -613,6 +614,15 @@ const editComment=async (req,res)=>{
   
 }
 
+const addToCompare=async (req,res)=>{
+  const productId=req.body.id
+  const user=await User.findOne({email:req.user})
+  if(user.compare.includes(productId))
+      return res.json({msg:"already in list"})
+  else
+    await user.updateOne({$push:{compare:productId}})
+  return res.json({msg:"Successfully added to your compare list"})
+}
 
 module.exports = {
   signUpController,
@@ -652,5 +662,6 @@ module.exports = {
   getProductCmt,
   isOwnerOfComment,
   deleteComment,
-  editComment
+  editComment,
+  addToCompare
 };

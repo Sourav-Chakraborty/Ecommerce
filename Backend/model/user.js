@@ -32,6 +32,10 @@ const user=new Schema({
         type:Array,
         default:[]
     },
+    compare:{
+        type:Array,
+        default:[]
+    },
     isAdmin:{
         type:Boolean,
         default:false
