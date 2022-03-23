@@ -1,4 +1,5 @@
 import React from "react";
+import axios from 'axios';
 import ReactDOM from "react-dom";
 import 'antd/dist/antd.css';
 import { PersistGate } from 'redux-persist/integration/react'
@@ -7,6 +8,13 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
 const {store,persistor}=getStore()
+
+
+axios.defaults.baseURL=process.env.REACT_APP_BASE_URL
+axios.defaults.headers.common={
+  "auth-token":localStorage.getItem("token")
+}
+
 ReactDOM.render(
   <Provider store={store}>
      <PersistGate loading={null} persistor={persistor}>

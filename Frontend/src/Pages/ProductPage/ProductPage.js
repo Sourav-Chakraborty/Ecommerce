@@ -111,7 +111,6 @@ class ProductPage extends Component {
   }
   render() {
     const rationg=this.state.rating
-    console.log(rationg)
     return (
       <div className="productPage">
         <Grid align="center">
@@ -123,7 +122,7 @@ class ProductPage extends Component {
           <Grid container spacing={2}>
             <Grid item xs={5}>
               <Card className="imgCard">
-                <img src={`/${this.state.img}`} alt="" />
+                <img style={{height:"300px",width:"400px"}} src={`/${this.state.img}`} alt="" />
               </Card>
             </Grid>
             <Grid item xs={6}>

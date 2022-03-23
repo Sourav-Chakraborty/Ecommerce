@@ -183,7 +183,7 @@ const createProduct = async (req, res) => {
     if (err) return console.log(err);
     console.log("Uploaded");
   });
-  const { name, type, company, model, country, mfg, rating, desc, price } =
+  const { name, type, company, model, country, mfg, rating, desc, price,searchKeys } =
     req.body;
 
   const isProductExists = await Product.findOne({
@@ -211,6 +211,7 @@ const createProduct = async (req, res) => {
     desc,
     price,
     img: date,
+    searchKeys:searchKeys.split(",")
   });
   // console.log(product,date)
   res.json(product);
@@ -228,8 +229,10 @@ const editProduct = async (req, res) => {
   const user = await User.findOne({ email: req.user });
   if (user.isAdmin === false) return res.json({ msg: "You are not admin" });
 
-  const { name, type, company, model, country, mfg, rating, desc, price, id } =
+  const { name, type, company, model, country, mfg, rating, desc, price, id,searchkeys } =
     req.body;
+ 
+ 
   Category.findOne({ name: type.toLowerCase() }).then((res) => {
     if (!res) Category.create({ name: type.toLowerCase() });
   });
@@ -248,6 +251,7 @@ const editProduct = async (req, res) => {
     rating,
     desc,
     price,
+    searchKeys:searchkeys.split(",")
   });
   return res.json({ status: "200", msg: "Successfully edited" });
 };

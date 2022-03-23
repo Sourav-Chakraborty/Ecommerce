@@ -32,7 +32,8 @@ class EditProduct extends Component {
       img: "",
       changeImg:"",
       brands:[],
-      categories:[]
+      categories:[],
+      searchKeys:""
     };
   }
   fetchCategories=()=>{
@@ -66,6 +67,7 @@ class EditProduct extends Component {
       desc,
       price,
       img,
+      searchKeys
     } = data;
     this.setState((prevState) => {
       prevState.name = name;
@@ -78,6 +80,7 @@ class EditProduct extends Component {
       prevState.desc = desc;
       prevState.price = price;
       prevState.img = img;
+      prevState.searchKeys=searchKeys.join(",")
       return prevState;
     });
   };
@@ -105,15 +108,15 @@ class EditProduct extends Component {
     formData.append("rating", this.state.rating);
     formData.append("price", this.state.price);
     formData.append("desc", this.state.desc);
-
+    formData.append("searchkeys", this.state.searchKeys);
     formData.append("id", this.props.match.params.id);
-
-    const response = await axios.put(
-      "http://localhost:5000/editProduct",
-      formData,
-      config
-    );
-    this.props.history.push("/");
+    console.log(formData)
+     const response = await axios.put(
+       "/editProduct",
+       formData,config
+     
+     );
+     this.props.history.push("/");
   };
   handleImgChange=(e)=>{
     this.setState((prevState)=>{
@@ -290,6 +293,20 @@ class EditProduct extends Component {
               </div>
 
               <div className="rowForDesc">
+              <TextareaAutosize
+                  defaultValue={this.state.searchKeys}
+                  required
+                  onChange={this.handleChange}
+                  name="searchKeys"
+                  aria-label="minimum height"
+                  minRows={3}
+                  placeholder="Comma separated search keys"
+                  style={{
+                    width: 500,
+                    marginRight: "auto",
+                    marginLeft: "auto",
+                  }}
+                />
                 <TextareaAutosize
                   defaultValue={this.state.desc}
                   required

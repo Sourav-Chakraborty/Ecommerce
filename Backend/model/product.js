@@ -39,6 +39,10 @@ const product=new Schema({
     img:{
         type:"String",
         default:""
+    },
+    searchKeys:{
+        type:Array,
+        default:[]
     }
 })
 

@@ -37,8 +37,8 @@ import axios from 'axios';
     const {img,desc,name,id,price,isAdmin}=this.props
     return (
       <div className='productCard'>
-          <div className="productImg">
-              <img className='productImg' src={img} alt="" />
+          <div className="productImgContainer">
+              <img  className='productImg' src={img} alt="" />
           </div>
           <div className="productBody">
               <h5 className="productBodyHeader">{name}</h5>

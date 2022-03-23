@@ -28,7 +28,7 @@ export default class Homepage extends Component {
       product: [],
       brands: [],
       categories: [],
-      price: [1000, 50000],
+      price: [1000, 99000],
       userBrands: [],
       userCate: [],
       autoSuggestion: [],
@@ -51,7 +51,6 @@ export default class Homepage extends Component {
     });
   };
   handleChange = (e,reason="") => {
-    console.log(reason)
     if(e===null){
       this.setState((prevState)=>{
         prevState.product=this.state.allproducts
@@ -63,8 +62,19 @@ export default class Homepage extends Component {
     
     this.state.allproducts.forEach((p) => {
       if (p.name.toLowerCase().includes(e.toLowerCase()))
-        productsArray.push(p);
+          productsArray.push(p);
     });
+    for(let i=0;i<this.state.allproducts.length;i++){
+      if(!productsArray.includes(this.state.allproducts[i])){
+        for(let j=0;j<this.state.allproducts[i].searchKeys.length;j++){
+            if(this.state.allproducts[i].searchKeys[j].toLowerCase().includes(e.toLowerCase())){
+                productsArray.push(this.state.allproducts[i]);
+                break
+            }
+        }
+      }
+        
+    }
     this.setState((prevState) => {
       prevState.product = productsArray;
       return prevState;
@@ -199,7 +209,7 @@ export default class Homepage extends Component {
       close.addEventListener("click", () => {
         this.handleChange("");
       });
-    }, 100);
+    }, 900);
     return (
       <>
         <Carousel />
@@ -266,7 +276,7 @@ export default class Homepage extends Component {
                         valueLabelDisplay="auto"
                         getAriaValueText={this.valuetext}
                         min={1000}
-                        max={50000}
+                        max={99000}
                       />
                     </Typography>
                   </CardContent>

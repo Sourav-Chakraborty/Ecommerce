@@ -26,6 +26,7 @@ class CreateProduct extends Component {
       price: "",
       desc: "",
       productImg: "",
+      searchKeys:[],
       brands:[],
       categories:[]
     };
@@ -83,7 +84,7 @@ class CreateProduct extends Component {
     formData.append("price", this.state.price);
     formData.append("desc", this.state.desc);
     formData.append("pImg", this.state.productImg);
-
+    formData.append("searchKeys",this.state.searchKeys)
     const response = await axios.post(
       "http://localhost:5000/createProduct",
       formData,
@@ -108,7 +109,6 @@ componentDidMount(){
   this.fetchCategories()
 }
   render() {
-    console.log(this.state)
     return (
       <div className="createProduct">
         <Container>
@@ -198,6 +198,19 @@ componentDidMount(){
               </div>
 
               <div className="rowForDesc">
+              <TextareaAutosize
+                  required
+                  onChange={this.handleChange}
+                  name="searchKeys"
+                  aria-label="minimum height"
+                  minRows={3}
+                  placeholder="Add comma separated search keys"
+                  style={{
+                    width: 500,
+                    marginRight: "auto",
+                    marginLeft: "auto",
+                  }}
+                />
                 <TextareaAutosize
                   required
                   onChange={this.handleChange}

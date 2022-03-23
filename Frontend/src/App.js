@@ -9,7 +9,6 @@ import {
   ChangePassword,
   AlertBox,
 } from "./Components";
-import Homepage2 from "./Pages/Homepage/Homepage2";
 import CartPage from "./Pages/CartPage/CartPage";
 import CreateProduct from "./Pages/CreateProductPage/CreateProduct";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
