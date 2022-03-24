@@ -16,7 +16,7 @@ import {
 import Product from "../../Components/Product/Product";
 import axios from "axios";
 import "./Homepage.css";
-import { Autocomplete } from "@material-ui/lab";
+import { Autocomplete, Pagination } from "@material-ui/lab";
 import CheckBoxOutlineBlank from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBox from "@material-ui/icons/CheckBox";
 
@@ -25,6 +25,7 @@ export default class Homepage extends Component {
     super(props);
     this.state = {
       allproducts: [],
+      filteredProducts:[],
       product: [],
       brands: [],
       categories: [],
@@ -32,6 +33,8 @@ export default class Homepage extends Component {
       userBrands: [],
       userCate: [],
       autoSuggestion: [],
+      totalPage:0,
+      activePage:1
     };
     this.deleteProduct.bind(this);
   }
@@ -45,8 +48,10 @@ export default class Homepage extends Component {
 
     this.setState((prevState) => {
       prevState.allproducts = productsArray;
-      prevState.product = productsArray;
+      prevState.filteredProducts=productsArray
+      prevState.product = productsArray.slice(0,9);
       prevState.autoSuggestion = suggestions;
+      prevState.totalPage=Math.ceil((productsArray.length)/9)
       return prevState;
     });
   };
@@ -76,7 +81,10 @@ export default class Homepage extends Component {
         
     }
     this.setState((prevState) => {
-      prevState.product = productsArray;
+      prevState.filteredProducts = productsArray;
+      prevState.activePage=1
+      prevState.product=productsArray.slice(0,9)
+      prevState.totalPage=Math.ceil(productsArray.length/9)
       return prevState;
     });
   };
@@ -125,7 +133,7 @@ export default class Homepage extends Component {
   handleBrands = (e, value) => {
     let arrayOfBrand = [];
     for (let i = 0; i < value.length; i++) arrayOfBrand.push(value[i].name);
-    console.log("arrayOfBrand ", arrayOfBrand);
+    
     this.setState(
       (prevstate) => {
         prevstate.userBrands = arrayOfBrand;
@@ -161,6 +169,7 @@ export default class Homepage extends Component {
     );
   };
   userFilter = () => {
+   
     let userProducts = [];
 
     if (this.state.userBrands.length) {
@@ -171,6 +180,7 @@ export default class Homepage extends Component {
         });
       });
     } else userProducts = this.state.allproducts;
+    console.log("userproduct",userProducts.length,userProducts)
     let userProducts2 = [];
     if (this.state.userCate.length) {
       this.state.userCate.forEach((uc) => {
@@ -180,28 +190,40 @@ export default class Homepage extends Component {
         });
       });
     } else userProducts2 = userProducts;
+    console.log("userproduct2",userProducts2.length,userProducts2)
 
     let finalProducts = [];
     userProducts2.forEach((up) => {
       if (
-        parseInt(this.state.price[0]) < parseInt(up.price) &&
-        parseInt(this.state.price[1]) > parseInt(up.price)
+        parseInt(this.state.price[0]) <= parseInt(up.price) &&
+        parseInt(this.state.price[1]) >= parseInt(up.price)
       ) {
-        console.log("inside range");
+       
         finalProducts.push(up);
       }
     });
+    console.log("finalProducts ",finalProducts.length,finalProducts)
     this.setState((prevState) => {
-      prevState.product = finalProducts;
+      prevState.filteredProducts = finalProducts;
+      prevState.activePage=1
+      prevState.product=finalProducts.slice(0,9)
+      prevState.totalPage=Math.ceil(finalProducts.length/9)
       return prevState;
     });
   };
+  handlePageChange=(page)=>{
+    const start=(page-1)*9,end=page*9
+    this.setState((prevState)=>{
+      prevState.activePage=page
+      prevState.product=this.state.filteredProducts.slice(start,end)
+      return prevState
+    })
+
+  }
   componentDidMount() {
     this.fetchAllProducts();
     this.fetchBrands();
     this.fetchCategories();
-  }
-  render() {
     setTimeout(() => {
       const close = document.getElementsByClassName(
         "MuiButtonBase-root MuiIconButton-root MuiAutocomplete-clearIndicator MuiAutocomplete-clearIndicatorDirty"
@@ -210,6 +232,9 @@ export default class Homepage extends Component {
         this.handleChange("");
       });
     }, 900);
+  }
+  render() {
+    
     return (
       <>
         <Carousel />
@@ -275,7 +300,7 @@ export default class Homepage extends Component {
                         onChange={(e, value) => this.handlePriceRange(e, value)}
                         valueLabelDisplay="auto"
                         getAriaValueText={this.valuetext}
-                        min={1000}
+                        min={100}
                         max={99000}
                       />
                     </Typography>
@@ -302,8 +327,9 @@ export default class Homepage extends Component {
                 /></Box>
               </Grid>
               <div className="caroselView my-3">
-                {this.state.product.map((p) => (
-                  <Product
+                {this.state.product.map((p,index) =>(
+                  
+                   <Product
                     deleteProduct={this.deleteProduct}
                     changeAlert={this.props.changeAlert}
                     key={p._id}
@@ -313,11 +339,17 @@ export default class Homepage extends Component {
                     desc={p.desc}
                     id={p._id}
                   />
-                ))}
+                 ))}
+
               </div>
+          <Grid container justify = "center">
+                <br /><br />
+                {this.state.filteredProducts.length>9 && <Pagination page={this.state.activePage} count={this.state.totalPage} color="primary" onChange={(e,page)=> this.handlePageChange(page)}/>}
+          </Grid>
             </Grid>
           </Grid>
         </Container>
+          
       </>
     );
   }
