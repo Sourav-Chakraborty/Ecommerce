@@ -29,7 +29,7 @@ export default class Homepage extends Component {
       product: [],
       brands: [],
       categories: [],
-      price: [1000, 99000],
+      price: [100, 99000],
       userBrands: [],
       userCate: [],
       autoSuggestion: [],
@@ -224,16 +224,14 @@ export default class Homepage extends Component {
     this.fetchAllProducts();
     this.fetchBrands();
     this.fetchCategories();
+  }
+  render() {
     setTimeout(() => {
       const close = document.getElementsByClassName(
         "MuiButtonBase-root MuiIconButton-root MuiAutocomplete-clearIndicator MuiAutocomplete-clearIndicatorDirty"
       )[0];
-      close.addEventListener("click", () => {
-        this.handleChange("");
-      });
-    }, 900);
-  }
-  render() {
+      close.style.display="none"
+    }, 100);
     
     return (
       <>
@@ -294,7 +292,6 @@ export default class Homepage extends Component {
                       <br /> <br />
                       <p>Price range</p>
                       <Slider
-                        disableSwap
                         label="Price range"
                         defaultValue={this.state.price}
                         onChange={(e, value) => this.handlePriceRange(e, value)}
