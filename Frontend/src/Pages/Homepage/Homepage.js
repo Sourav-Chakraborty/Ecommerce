@@ -232,7 +232,7 @@ export default class Homepage extends Component {
       )[0];
       close.style.display="none"
     }, 100);
-    
+    console.log("hello")
     return (
       <>
         <Carousel />
