@@ -46,4 +46,6 @@ router.put("/editComment/:id",fetchUser,controllers.editComment)
 router.put("/addToCompare",fetchUser,controllers.addToCompare)
 router.get("/getCompareList",fetchUser,controllers.getCompareList)
 router.put("/removeFromCompare",fetchUser,controllers.removeFromCompare)
+router.get("/getWishList",fetchUser,controllers.getWishListProduct)
+router.put("/removeFromWishList",fetchUser,controllers.removeFromWishList)
 module.exports=router

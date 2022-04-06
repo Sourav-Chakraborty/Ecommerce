@@ -38,7 +38,7 @@ import axios from 'axios';
     return (
       <div className='productCard'>
           <div className="productImgContainer">
-              <img  className='productImg' src={img} alt="" />
+              <img  className='productImg' src={"/"+img} alt="" />
           </div>
           <div className="productBody">
               <h5 className="productBodyHeader">{name}</h5>

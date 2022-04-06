@@ -324,9 +324,10 @@ const removeFromCart = async (req, res) => {
 
   const user = await User.updateOne(
     { email: req.user, "cart.productId": productId },
-    { $pull: { cart: { productId } } }
+    { $pull: { cart: { productId } }}
   );
-
+  const isInWishList=await User.findOneAndUpdate({email:req.user,wishList:{$ne:productId}},{$addToSet:{wishList:productId}})//if not in wish list then push it
+  
   res.json({ msg: "removed from cart" });
 };
 
@@ -645,6 +646,27 @@ const removeFromCompare=async (req,res)=>{
 }
 
 
+const getWishListProduct=async (req,res)=>{
+  const productList=[]
+  const user=await User.findOne({email:req.user})
+  for(let i=0;i<user.wishList.length;i++){
+    const product=await Product.findById(user.wishList[i])
+    productList.push(product)
+  }
+  return res.json(productList)
+
+}
+
+const removeFromWishList=async (req,res)=>{
+  
+  const user=await User.findOneAndUpdate({email:req.user},{
+    $pull:{wishList:req.body.productId}
+  })
+ 
+  return res.json({msg:"done"})
+}
+
+
 module.exports = {
   signUpController,
   signInController,
@@ -686,5 +708,7 @@ module.exports = {
   editComment,
   addToCompare,
   getCompareList,
-  removeFromCompare
+  removeFromCompare,
+  getWishListProduct,
+  removeFromWishList
 };

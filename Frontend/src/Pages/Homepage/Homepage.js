@@ -220,6 +220,7 @@ export default class Homepage extends Component {
     })
 
   }
+
   componentDidMount() {
     this.fetchAllProducts();
     this.fetchBrands();
@@ -236,7 +237,7 @@ export default class Homepage extends Component {
     return (
       <>
         <Carousel />
-        <Container>
+        <Container >
           <Grid style={{ display: "flex", flexWrap: "wrap" }} item xs={12}>
             <Grid item xs={2} md={2} sm={12}>
               <div className="filter">

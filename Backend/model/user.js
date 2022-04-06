@@ -39,6 +39,14 @@ const user=new Schema({
     isAdmin:{
         type:Boolean,
         default:false
+    },
+    wishList:{
+        type:Array,
+        default:[]
+    },
+    history:{
+        type:Array,
+        default:[]
     }
 })
 
