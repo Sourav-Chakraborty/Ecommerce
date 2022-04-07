@@ -8,6 +8,8 @@ import Rating from '@material-ui/lab/Rating';
 import { incrementCartVal } from "../../Redux_Store/actions/cartAction";
 import {addToCompare} from "../../Redux_Store/actions/compareAction"
 import CommentContainer from "../../Components/CommentContainer/CommentContainer";
+import fetchHistory from "../../Redux_Store/actions/fetchHistoryAction"
+import History from "../../Components/History/History";
 class ProductPage extends Component {
   constructor(props) {
     super(props);
@@ -106,9 +108,38 @@ class ProductPage extends Component {
       },5000)
     }
   }
+
+  addToHistory=async ()=>{
+    
+    const { id } = this.props.match.params;
+    const config = {
+      headers: {
+        "auth-token": localStorage.getItem("token"),
+      },
+    };
+    const response=await axios.put("http://localhost:5000/addToHistory",{productId:id},config)
+  }
+  fetchAllPrevProducts=()=>{
+ 
+    this.props.fetchUserHistory(false)
+    this.props.fetchUserHistory(true)
+
+  }
+
   componentDidMount() {
     this.fetchProductInfo();
+    this.addToHistory()
   }
+  componentDidUpdate(prevProps){
+    if(this.props.match.params.id!==prevProps.match.params.id)
+        this.fetchProductInfo();
+
+  }
+  componentWillUnmount(){
+    this.fetchAllPrevProducts()
+  }
+
+  
   render() {
     const rationg=this.state.rating
     return (
@@ -187,6 +218,7 @@ class ProductPage extends Component {
           </Card>
 
         </Container>
+        <History/>
       </div>
     );
   }
@@ -203,6 +235,9 @@ const mapDispatchToProps=(dispatch)=>{
     },
     incrementCompare:(n=1)=>{
       dispatch(addToCompare(n))
+    },
+    fetchUserHistory:(val)=>{
+      dispatch(fetchHistory(val))
     }
   }
 }

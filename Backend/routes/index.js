@@ -48,4 +48,6 @@ router.get("/getCompareList",fetchUser,controllers.getCompareList)
 router.put("/removeFromCompare",fetchUser,controllers.removeFromCompare)
 router.get("/getWishList",fetchUser,controllers.getWishListProduct)
 router.put("/removeFromWishList",fetchUser,controllers.removeFromWishList)
+router.put("/addToHistory",fetchUser,controllers.pushToHistory)
+router.get("/getHistory",fetchUser,controllers.getAllHistory)
 module.exports=router

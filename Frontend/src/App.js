@@ -23,7 +23,8 @@ import ManageCatBrand from "./Pages/ManageCat&Brand/ManageCatBrand";
 import Homepage from "./Pages/Homepage/Homepage";
 import AllOrderPage from "./Pages/AllOrdersPage/AllOrderPage";
 import CompairPage from "./Pages/CompairPage/CompairPage";
-export default class App extends Component {
+import { withRouter } from "react-router-dom"; 
+ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -86,8 +87,9 @@ export default class App extends Component {
               <Route path="/changePassword">
                 <ChangePassword changeAlert={this.changeAlert} />
               </Route>
-              <Route path="/product/:id">
-                <ProductPage changeAlert={this.changeAlert} />
+              <Route path="/product/:id" >
+               
+                <ProductPage  changeAlert={this.changeAlert} />
               </Route>
               <Route path="/createProduct">
                 <CreateProduct changeAlert={this.changeAlert} />
@@ -117,6 +119,7 @@ export default class App extends Component {
                 <CompairPage changeAlert={this.changeAlert} />
               </Route>
             </Switch>
+           
           </div>
           <Footer />
         </Router>
@@ -124,3 +127,4 @@ export default class App extends Component {
     );
   }
 }
+export default (App)

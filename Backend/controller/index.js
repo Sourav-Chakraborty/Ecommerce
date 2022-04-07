@@ -666,7 +666,27 @@ const removeFromWishList=async (req,res)=>{
   return res.json({msg:"done"})
 }
 
+const pushToHistory=async (req,res)=>{
+  const productId=req.body.productId
+  const user=await User.findOne({email:req.user})
+  if(user.history.length>=10){
+    const userHistory=user.history
+    await user.updateOne({$set:{history:userHistory.slice(0,9)}})
+  }
+  await user.updateOne({$pull:{history:productId}})
+  await user.updateOne({$push:{history:productId}})
+  res.json({length:user.history.length})
+}
 
+const getAllHistory=async (req,res)=>{
+  const productList=[]
+  const user=await User.findOne({email:req.user})
+  for(let i=0;i<user.history.length;i++){
+    const product=await Product.findById(user.history[i])
+    productList.push(product)
+  }
+  return res.json(productList)
+}
 module.exports = {
   signUpController,
   signInController,
@@ -710,5 +730,7 @@ module.exports = {
   getCompareList,
   removeFromCompare,
   getWishListProduct,
-  removeFromWishList
+  removeFromWishList,
+  pushToHistory,
+  getAllHistory
 };

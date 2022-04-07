@@ -19,7 +19,7 @@ import "./Homepage.css";
 import { Autocomplete, Pagination } from "@material-ui/lab";
 import CheckBoxOutlineBlank from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBox from "@material-ui/icons/CheckBox";
-
+import History from "../../Components/History/History"; 
 export default class Homepage extends Component {
   constructor(props) {
     super(props);
@@ -228,12 +228,11 @@ export default class Homepage extends Component {
   }
   render() {
     setTimeout(() => {
-      const close = document.getElementsByClassName(
-        "MuiButtonBase-root MuiIconButton-root MuiAutocomplete-clearIndicator MuiAutocomplete-clearIndicatorDirty"
-      )[0];
-      close.style.display="none"
+      // const close = document.getElementsByClassName(
+      //   "MuiButtonBase-root MuiIconButton-root MuiAutocomplete-clearIndicator MuiAutocomplete-clearIndicatorDirty"
+      // )[0];
+      // close.style.display="none"
     }, 100);
-    console.log("hello")
     return (
       <>
         <Carousel />
@@ -347,7 +346,7 @@ export default class Homepage extends Component {
             </Grid>
           </Grid>
         </Container>
-          
+        <History/>
       </>
     );
   }
