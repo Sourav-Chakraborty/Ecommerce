@@ -27,6 +27,7 @@ export default class Homepage extends Component {
       allproducts: [],
       filteredProducts:[],
       product: [],
+      products:[],
       brands: [],
       categories: [],
       price: [100, 99000],
@@ -220,13 +221,36 @@ export default class Homepage extends Component {
     })
 
   }
+  fetchHistory = async () => {
+    
+
+    const config = {
+      headers: {
+        "auth-token": localStorage.getItem("token"),
+      },
+    };
+    const response = await axios.get(
+      "http://localhost:5000/getHistory",
+      config
+    );
+    if (response.data.length) {
+      const productsArray=response.data.reverse()
+      
+      this.setState((prevState) => {
+        prevState.products = productsArray;
+        return prevState;
+      });
+    }
+  };
 
   componentDidMount() {
     this.fetchAllProducts();
     this.fetchBrands();
     this.fetchCategories();
+    this.fetchHistory()
   }
   render() {
+    console.log("products ",this.state.products)
     setTimeout(() => {
       // const close = document.getElementsByClassName(
       //   "MuiButtonBase-root MuiIconButton-root MuiAutocomplete-clearIndicator MuiAutocomplete-clearIndicatorDirty"
@@ -346,7 +370,7 @@ export default class Homepage extends Component {
             </Grid>
           </Grid>
         </Container>
-        <History/>
+        <History products={this.state.products}/>
       </>
     );
   }

@@ -67,7 +67,7 @@ class History extends Component {
               infinite={true}
             >
               <Slider>
-                {this.state.products.map((p) => (
+                {this.props.products.map((p) => (
                   <Slide>
                     <Product
                       key={p.id}

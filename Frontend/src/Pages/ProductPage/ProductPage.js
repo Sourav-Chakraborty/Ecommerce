@@ -24,6 +24,7 @@ class ProductPage extends Component {
       desc: "",
       price: "",
       img: "",
+      products:[]
     };
   }
   fetchProductInfo = async () => {
@@ -84,6 +85,7 @@ class ProductPage extends Component {
    
   };
 
+
   handleAddToCompare=async()=>{
     const { id } = this.props.match.params;
     const config = {
@@ -119,28 +121,49 @@ class ProductPage extends Component {
     };
     const response=await axios.put("http://localhost:5000/addToHistory",{productId:id},config)
   }
-  fetchAllPrevProducts=()=>{
- 
-    this.props.fetchUserHistory(false)
-    this.props.fetchUserHistory(true)
+  
+  fetchHistory = async () => {
+    const { id } = this.props.match.params;
 
-  }
+    const config = {
+      headers: {
+        "auth-token": localStorage.getItem("token"),
+      },
+    };
+    const response = await axios.get(
+      "http://localhost:5000/getHistory",
+      config
+    );
+    if (response.data.length) {
+      const productsArray=response.data.reverse()
+      productsArray.forEach((element,index) => {
+        if(element._id===id)
+            productsArray.splice(index,1)
+      });
+      this.setState((prevState) => {
+        prevState.products = productsArray;
+        return prevState;
+      });
+    }
+  };
 
   componentDidMount() {
     this.fetchProductInfo();
     this.addToHistory()
+    this.fetchHistory()
   }
   componentDidUpdate(prevProps){
-    if(this.props.match.params.id!==prevProps.match.params.id)
+    if(this.props.match.params.id!==prevProps.match.params.id){
         this.fetchProductInfo();
+    this.fetchHistory()
 
+    }
   }
-  componentWillUnmount(){
-    this.fetchAllPrevProducts()
-  }
+  
 
   
   render() {
+    
     const rationg=this.state.rating
     return (
       <div className="productPage">
@@ -218,7 +241,7 @@ class ProductPage extends Component {
           </Card>
 
         </Container>
-        <History/>
+        <History products={this.state.products}/>
       </div>
     );
   }
