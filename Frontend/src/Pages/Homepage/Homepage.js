@@ -252,10 +252,10 @@ export default class Homepage extends Component {
   render() {
     console.log("products ",this.state.products)
     setTimeout(() => {
-      // const close = document.getElementsByClassName(
-      //   "MuiButtonBase-root MuiIconButton-root MuiAutocomplete-clearIndicator MuiAutocomplete-clearIndicatorDirty"
-      // )[0];
-      // close.style.display="none"
+      const close = document.getElementsByClassName(
+        "MuiButtonBase-root MuiIconButton-root MuiAutocomplete-clearIndicator MuiAutocomplete-clearIndicatorDirty"
+      )[0];
+      close.style.display="none"
     }, 100);
     return (
       <>
