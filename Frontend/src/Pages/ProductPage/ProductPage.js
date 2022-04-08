@@ -231,8 +231,12 @@ class ProductPage extends Component {
                   <Rating name="half-rating-read" value={rationg} precision={0.5} readOnly />
                   
                 </Grid>
-              </Card>
+                <Grid xs={12}>
+                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aliquid eveniet error eos facilis saepe velit eaque, perspiciatis, tempora voluptate sunt odio voluptatibus repellat exercitationem. Libero sequi dolorem fugiat amet voluptatibus voluptatem similique magni ipsum dolores, id enim. Dolor odio perspiciatis, voluptas excepturi eos quaerat eveniet ut. Quaerat corrupti vero eos.
               {this.state.desc}
+                </Grid>
+               
+              </Card>
             </Grid>
           </Grid>
           <Grid className="productPageFooter" xs={12}>
