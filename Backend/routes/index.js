@@ -50,4 +50,5 @@ router.get("/getWishList",fetchUser,controllers.getWishListProduct)
 router.put("/removeFromWishList",fetchUser,controllers.removeFromWishList)
 router.put("/addToHistory",fetchUser,controllers.pushToHistory)
 router.get("/getHistory",fetchUser,controllers.getAllHistory)
+router.put("/addToWishList",fetchUser,controllers.addToWishList)
 module.exports=router

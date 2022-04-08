@@ -687,6 +687,13 @@ const getAllHistory=async (req,res)=>{
   }
   return res.json(productList)
 }
+
+const addToWishList=async (req,res)=>{
+  const {productId}=req.body
+  const isInWishList=await User.findOneAndUpdate({email:req.user,wishList:{$ne:productId}},{$addToSet:{wishList:productId}})//if not in wish list then push it
+  return res.json({msg:"pushed to wishlist"})
+}
+
 module.exports = {
   signUpController,
   signInController,
@@ -732,5 +739,6 @@ module.exports = {
   getWishListProduct,
   removeFromWishList,
   pushToHistory,
-  getAllHistory
+  getAllHistory,
+  addToWishList
 };

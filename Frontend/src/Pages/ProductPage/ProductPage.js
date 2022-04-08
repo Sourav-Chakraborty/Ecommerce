@@ -146,6 +146,31 @@ class ProductPage extends Component {
       });
     }
   };
+  addToWishList=async ()=>{
+    const { id } = this.props.match.params;
+
+    const config = {
+      headers: {
+        "auth-token": localStorage.getItem("token"),
+      },
+    };
+    const response=await axios.put("http://localhost:5000/addToWishList",{productId:id},config)
+    if(response.data.msg){
+    
+      this.props.changeAlert(true,"success","Added to your wishList")
+      setTimeout(()=>{
+      this.props.changeAlert(false)
+
+      },5000)
+    }
+    else{
+      this.props.changeAlert(true,"error",response.data.msg)
+      setTimeout(()=>{
+      this.props.changeAlert(false)
+
+      },5000)
+    }
+  }
 
   componentDidMount() {
     this.fetchProductInfo();
@@ -211,7 +236,7 @@ class ProductPage extends Component {
             </Grid>
           </Grid>
           <Grid className="productPageFooter" xs={12}>
-            <Grid className="productPageBtns" xs={5}>
+            <Grid className="productPageBtns" xs={6}>
               <Button
                 className="productPageBtn red mx-2"
                 variant="contained"
@@ -222,7 +247,7 @@ class ProductPage extends Component {
                 Add to Cart
               </Button>
               <Button
-                className="productPageBtn green mx-2"
+                className="productPageBtn yellow mx-2"
                 variant="contained"
                 color="success"
                 onClick={this.handleAddToCompare}
@@ -230,8 +255,17 @@ class ProductPage extends Component {
               >
                 Add to Compair
               </Button>
+              <Button
+                className="productPageBtn green mx-2"
+                variant="contained"
+                color="warning"
+                onClick={this.addToWishList}
+                disabled={!this.props.isLoggedin && true}
+              >
+                Add to Wishlist
+              </Button>
             </Grid>
-            <Grid xs={6} className="productPagePrice">
+            <Grid xs={4} className="productPagePrice">
               <h2>Price Rs. {this.state.price}</h2>
             </Grid>
           </Grid>

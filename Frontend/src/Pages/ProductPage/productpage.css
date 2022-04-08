@@ -38,8 +38,9 @@
     margin-bottom: 40px;
 }
 .productPageBtns{
+   display: flex;
+   flex-wrap: wrap;
    
-   padding-left: 10% !important;
    padding-top: 0.5%;
     margin:20px 0;
     height: 50px;
@@ -49,6 +50,11 @@
 .red{
     background-color: red !important;
     color: white !important;
+}
+.yellow{
+    background-color: #ffc107 !important;
+    color: white !important;
+
 }
 .green{
     background-color: green !important;
